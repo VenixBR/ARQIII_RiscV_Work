@@ -71,8 +71,8 @@ u_dut
 //-----------------------------------------------------------------
 (
     // Inputs
-     .clk_i(clk)
-    ,.rst_i(rst)
+     .clk(clk)
+    ,.rst_n(rst)
     ,.mem_d_data_rd_i(mem_d_data_rd_w)
     ,.mem_d_accept_i(mem_d_accept_w)
     ,.mem_d_ack_i(mem_d_ack_w)
