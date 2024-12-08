@@ -1,4 +1,5 @@
-<center> <h1> Computer Organization and Architecture III </h1> </center>
+<div align="center"> <h1> Computer Organization and Architecture III  </h1>
+</div>
 
 This project is part of the Computer Organization and Architecture III (2024.2) course. The objective of the project was to implement a logical synthesis of [biRISC-V Core](http://github.com/ultraembedded/biriscv) using IBM 180 PDK and perform a Gate Level Simulation.
 
