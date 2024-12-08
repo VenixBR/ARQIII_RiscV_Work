@@ -7,7 +7,7 @@ This project is part of the Computer Organization and Architecture III (2024.2) 
 1. [biRISC-V](#biriscv)
 2. [Logic Synthesis](#logic-synthesis)
 3. [Generating Applications](#generating-applications)
-4. [Gate Level Simulation](#fourth-examplehttpwwwfourthexamplecom)
+4. [Gate Level Simulation](#gate-level-simulation)
 
 <hr />
 
@@ -101,3 +101,10 @@ You must have [riscv-gnu-toolchain](https://github.com/riscv-collab/riscv-gnu-to
 The linker script `riscv-app-gen/link.ld` was obtained from [Google's RISCV-DV](https://github.com/google/riscv-dv).
 
 The entry point specified in the linker command is the main function, therefore, you must check the entry point address code with the comand `make info` e.g `make info ELF=main.elf`. This entry point is required to execute the testbench and need to be passed to the `reset_vector_i` input in `src/riscv_core.v` .
+
+
+## Gate Level Simulation <a name="gate-level-simulation"></a>
+
+Post-synthesis Simulation using Cadence SimVision
+
+![Dual-Issue](docs/gls_sim_vision.png)
