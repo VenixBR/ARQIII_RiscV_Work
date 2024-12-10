@@ -5,6 +5,7 @@ CC = riscv64-unknown-elf-gcc
 LD = riscv64-unknown-elf-ld
 OBJDUMP = riscv64-unknown-elf-objdump
 READELF = riscv64-unknown-elf-readelf
+OBJCOPY = riscv64-unknown-elf-objcopy
 
 CFLAGS = -march=rv32im -mabi=ilp32 -O0
 LDFLAGS = -b elf32-littleriscv -T link.ld -entry=main
@@ -13,10 +14,13 @@ GCC_LDFLAGS = -T link.ld -nostartfiles -e main -O2
 OBJ = $(SRC:.c=.o)
 ELF = $(SRC:.c=.elf)
 ASM = $(SRC:.c=.s)
-
+BIN = $(SRC:.c=.bin)
 
 # Regras
-all: $(ELF) $(ASM) info
+all: $(ELF) $(ASM) $(BIN) info
+
+$(BIN): $(ELF)
+	$(OBJCOPY) -O binary $< $@
 
 $(OBJ): $(SRC)
 	$(CC) $(CFLAGS) -o $@ -c $<
