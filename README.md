@@ -90,11 +90,7 @@ project
 
 ## Generating Applications <a name="generating-applications"></a>
 
-On `riscv-app-gen` you can find some risc-v applications (C, bin, elf) in the subdirectories. Also, you can generate your own program file by executing the `make` command specifying the C code e.g `make SRC=main.c`. This will use  `riscv64-unknown-elf-ld` to manually link the code.
-
-You can also use gcc (`riscv64-unknown-elf-gcc`) to compile and link,  e.g `make gcc_elf SRC=main.c`.
-
-
+On `riscv-app-gen` you can find some risc-v applications (C, bin, elf) in the subdirectories. Also, you can generate your own program file by executing the `make` command specifying the C code e.g `make SRC=main.c`. 
 
 You must have [riscv-gnu-toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain) installed with Linux multilib and available in your `PATH` environment variable.
 
@@ -105,6 +101,6 @@ The entry point specified in the linker command is the main function, therefore,
 
 ## Gate Level Simulation <a name="gate-level-simulation"></a>
 
-Post-synthesis Simulation using Cadence SimVision
+Post-synthesis Simulation using Cadence SimVision. Bubble sort execution.
 
-![Dual-Issue](docs/gls_sim_vision.png)
+![Dual-Issue](docs/gls_sim_vision_bubble.png)
