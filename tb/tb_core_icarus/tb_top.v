@@ -29,7 +29,7 @@ begin
     for (i=0;i<131072;i=i+1)
         mem[i] = 0;
 
-    f = $fopenr("./build/tcm.bin");
+    f = $fopen("./build/tcm.bin", "r");
     i = $fread(mem, f);
     for (i=0;i<131072;i=i+1)
         u_mem.write(i, mem[i]);
