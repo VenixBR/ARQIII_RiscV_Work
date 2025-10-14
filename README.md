@@ -47,10 +47,10 @@ The synsthesis was performed with <i> Cadence RTL Compiler</i> , the execution s
 The core modules that must be included in the synthesis filelist are:
 
 ```
-project
+src
 │   
 │
-└───src
+└───core
     │ biriscv_defs.v
     │ biriscv_alu.v
     │ biriscv_csr_regfile.v
@@ -76,10 +76,7 @@ project
 The non-synthesizable testbench modules are:
 
 ```
-project
-│
-│
-└───tb
+tb
    └───tb_core_icarus
         │   tcm_mem_ram.v
         │   tcm_mem.v
