@@ -1,0 +1,1210 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2023 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[18:29:28.296946] Configured Lic search path (21.01-s002): 27001@192.168.1.10:27001@200.132.35.25
+
+Version: 21.18-s082_1, built Tue Jul 18 09:08:41 PDT 2023
+Options: -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite -files /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/riscv_core.tcl 
+Date:    Mon Oct 20 18:29:28 2025
+Host:    gmicro02 (x86_64 w/Linux 4.18.0-553.37.1.el8_10.x86_64) (16cores*32cpus*2physical cpus*Intel(R) Xeon(R) Silver 4314 CPU @ 2.40GHz 16384KB) (124344320KB)
+PID:     438092
+OS:      Red Hat Enterprise Linux release 8.10 (Ootpa)
+
+
+[18:29:28.337611] Periodic Lic check successful
+[18:29:28.337618] Feature usage summary:
+[18:29:28.337619] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (8 seconds elapsed).
+
+
+[18:29:37.116586] Periodic Lic check successful
+[18:29:37.116603] Feature usage summary:
+[18:29:37.116603] Genus_Synthesis
+[18:29:37.116603] Genus_Physical_Opt
+Checking out license: Genus_Physical_Opt
+
+#@ Processing -files option
+@genus 1> source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/riscv_core.tcl
+#@ Begin verbose source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/riscv_core.tcl
+@file(riscv_core.tcl) 16: set PROJECT_DIR $env(PROJECT_DIR)
+@file(riscv_core.tcl) 17: set TECH_DIR $env(TECH_DIR)
+@file(riscv_core.tcl) 18: set DESIGNS $env(DESIGNS)
+@file(riscv_core.tcl) 19: set HDL_NAME $env(HDL_NAME)
+@file(riscv_core.tcl) 20: set INTERCONNECT_MODE ple
+@file(riscv_core.tcl) 21: set OP_CORNER $env(OP_CORNER)
+@file(riscv_core.tcl) 22: set HDL_LANG $env(HDL_LANG)
+@file(riscv_core.tcl) 23: set USE_VCD_POWER_ANALYSIS 1
+@file(riscv_core.tcl) 25: set freq_mhz $env(FREQ_MHZ)
+@file(riscv_core.tcl) 30: set MAIN_CLOCK_NAME clk
+@file(riscv_core.tcl) 31: set MAIN_RST_NAME rst_n
+@file(riscv_core.tcl) 32: set BEST_LIB_OPERATING_CONDITION PVT_1P32V_0C
+@file(riscv_core.tcl) 33: set WORST_LIB_OPERATING_CONDITION PVT_0P9V_125C
+@file(riscv_core.tcl) 34: set period_clk [format "%.2f" [expr 1000.0 / $freq_mhz]] ;# (100 ns = 10 MHz) (10 ns = 100 MHz) (2 ns = 500 MHz) (1 ns = 1 GHz)
+@file(riscv_core.tcl) 35: set clk_uncertainty 0.05 ;# ns (“a guess”)
+@file(riscv_core.tcl) 36: set clk_latency 0.10 ;# ns (“a guess”)
+@file(riscv_core.tcl) 37: set in_delay 0.30 ;# ns
+@file(riscv_core.tcl) 38: set out_delay 0.30;#ns 
+@file(riscv_core.tcl) 39: set out_load 0.045 ;#pF 
+@file(riscv_core.tcl) 40: set slew "146 164 264 252" ;#minimum rise, minimum fall, maximum rise and maximum fall 
+@file(riscv_core.tcl) 41: set slew_min_rise 0.146 ;# ns
+@file(riscv_core.tcl) 42: set slew_min_fall 0.164 ;# ns
+@file(riscv_core.tcl) 43: set slew_max_rise 0.264 ;# ns
+@file(riscv_core.tcl) 44: set slew_max_fall 0.252 ;# ns
+@file(riscv_core.tcl) 46: set WORST_LIST {slow_vdd1v0_basicCells.lib} 
+@file(riscv_core.tcl) 47: set BEST_LIST {fast_vdd1v2_basicCells.lib} 
+@file(riscv_core.tcl) 48: set LEF_LIST {gsclib045_tech.lef gsclib045_macro.lef}
+@file(riscv_core.tcl) 49: set WORST_CAP_LIST ${TECH_DIR}/gpdk045_v_6_0/soce/gpdk045.basic.CapTbl
+@file(riscv_core.tcl) 50: set QRC_LIST ${TECH_DIR}/gpdk045_v_6_0/qrc/rcworst/qrcTechFile
+@file(riscv_core.tcl) 57: source ${PROJECT_DIR}/Synthesis/scripts/common/path.tcl
+Sourcing '/home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/path.tcl' (Mon Oct 20 18:29:37 -03 2025)...
+#@ Begin verbose source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/path.tcl
+@file(path.tcl) 5: set SYNT_DIR ${PROJECT_DIR}/Synthesis
+@file(path.tcl) 6: set SCRIPT_DIR ${SYNT_DIR}/scripts
+@file(path.tcl) 7: set RPT_DIR ${SYNT_DIR}/reports
+@file(path.tcl) 8: set DEV_DIR ${SYNT_DIR}/deliverables
+@file(path.tcl) 13: set FRONTEND_DIR ${PROJECT_DIR}/src/core
+@file(path.tcl) 14: set HDL_DIR ${PROJECT_DIR}/src/core
+@file(path.tcl) 15: set OTHERS ""
+@file(path.tcl) 16: lappend FRONTEND_DIR $OTHERS
+@file(path.tcl) 21: set LIB_DIR ${TECH_DIR}/gsclib045_svt_v4.4/gsclib045/timing
+@file(path.tcl) 24: set LEF_DIR ${TECH_DIR}/gsclib045_svt_v4.4/gsclib045/lef
+@file(path.tcl) 25: lappend LEF_DIR ${TECH_DIR}/giolib045_v3.3/lef
+#@ End verbose source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/path.tcl
+@file(riscv_core.tcl) 62: source ${SCRIPT_DIR}/common/tech.tcl
+Sourcing '/home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/tech.tcl' (Mon Oct 20 18:29:37 -03 2025)...
+#@ Begin verbose source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/tech.tcl
+@file(tech.tcl) 5: create_library_domain {worst best} 
+@file(tech.tcl) 6: get_db library_domains *
+@file(tech.tcl) 12: set_db lib_search_path "${LIB_DIR} ${LEF_DIR}"
+  Setting attribute of root '/': 'lib_search_path' = /home/tools/design_kits/cadence/GPDK045//gsclib045_svt_v4.4/gsclib045/timing /home/tools/design_kits/cadence/GPDK045//gsclib045_svt_v4.4/gsclib045/lef /home/tools/design_kits/cadence/GPDK045//giolib045_v3.3/lef
+@file(tech.tcl) 13: set_db [get_db library_domains worst] .library ${WORST_LIST}
+
+Threads Configured:3
+
+  Message Summary for Library slow_vdd1v0_basicCells.lib:
+  *******************************************************
+  Missing a function attribute in the output pin definition. [LBR-518]: 1
+  *******************************************************
+ 
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 0.900000, 125.000000) in library 'slow_vdd1v0_basicCells.lib'.
+        : The nominal operating condition is represented, either by the nominal PVT values specified in the library source (via nom_process,nom_voltage and nom_temperature respectively), or by the default PVT values (1.0,1.0,1.0).
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA' must have an output pin.
+        : Add the missing output pin(s), then reload the library. Else the library cell will be marked as timing model i.e. unusable. Timing_model means that the cell does not have any defined function. If there is no output pin, Genus will mark library cell as unusable i.e. the attribute 'usable' will be marked to 'false' on the libcell. Therefore, the cell is not used for mapping and it will not be picked up from the library for synthesis. If you query the attribute 'unusable_reason' on the libcell; result will be: 'Library cell has no output pins.'Note: The message LBR-9 is only for the logical pins and not for the power_ground pins. Genus will depend upon the output function defined in the pin group (output pin) of the cell, to use it for mapping. The pg_pin will not have any function defined.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP10' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP10' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP2' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP2' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP3' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP3' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP4' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP4' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP5' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP5' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP6' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP6' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP7' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP7' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP8' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP8' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP9' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP9' must have an output pin.
+Info    : Set default library domain. [LBR-109]
+        : The default library domain is 'library_domain:worst'.
+  Setting attribute of library_domain 'worst': 'library' = slow_vdd1v0_basicCells.lib
+@file(tech.tcl) 14: set_db [get_db library_domains best] .library ${BEST_LIST}
+
+Threads Configured:3
+
+  Message Summary for Library fast_vdd1v2_basicCells.lib:
+  *******************************************************
+  Missing a function attribute in the output pin definition. [LBR-518]: 1
+  *******************************************************
+ 
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 1.320000, 0.000000) in library 'fast_vdd1v2_basicCells.lib'.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP10' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP10' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP2' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP2' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP3' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP3' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP4' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP4' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP5' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP5' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP6' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP6' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP7' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP7' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP8' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP8' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP9' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DECAP9' must have an output pin.
+  Setting attribute of library_domain 'best': 'library' = fast_vdd1v2_basicCells.lib
+@file(tech.tcl) 20: get_db [get_db library_domains *worst] .operating_conditions
+@file(tech.tcl) 21: set_db [get_db library_domains *worst] .operating_conditions ${WORST_LIB_OPERATING_CONDITION}
+  Setting attribute of library_domain 'worst': 'operating_conditions' = operating_condition:ls_of_ld_worst/slow_vdd1v0/PVT_0P9V_125C
+@file(tech.tcl) 22: get_db [get_db library_domains *worst] .operating_conditions
+@file(tech.tcl) 24: get_db [get_db library_domains *best] .operating_conditions
+@file(tech.tcl) 25: set_db [get_db library_domains *best] .operating_conditions ${BEST_LIB_OPERATING_CONDITION}
+  Setting attribute of library_domain 'best': 'operating_conditions' = operating_condition:ls_of_ld_best/fast_vdd1v2/PVT_1P32V_0C
+@file(tech.tcl) 26: get_db [get_db library_domains *best] .operating_conditions
+@file(tech.tcl) 28: get_db [get_db library_domain *worst] .default
+@file(tech.tcl) 29: get_db [get_db library_domain *best] .default 
+@file(tech.tcl) 31: get_db [vfind /libraries -library_domain worst] .active_operating_conditions
+  Library has 324 usable logic and 128 usable sequential lib-cells.
+  Library has 324 usable logic and 128 usable sequential lib-cells.
+@file(tech.tcl) 32: get_db [vfind /libraries -library_domain best] .active_operating_conditions 
+@file(tech.tcl) 44: set_db lef_library ${LEF_LIST}
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_HV' has no resistance value.
+        : If this is the expected behavior, this message can be ignored.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_VV' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_VH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_HH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_2x1_HV_E' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_2x1_HV_W' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_1x2_HV_N' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M2_M1_1x2_HV_S' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_VH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_HH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_HV' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_VV' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_M_NH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_M_SH' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_2x1_VH_E' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_2x1_VH_W' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_1x2_VH_N' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M3_M2_1x2_VH_S' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M4_M3_HV' has no resistance value.
+Info    : Via with no resistance will have a value of '0.0' assigned for resistance value. [PHYS-129]
+        : Via 'M4_M3_VV' has no resistance value.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'PHYS-129'.
+
+  According to lef_library, there are total 11 routing layers [ V(5) / H(6) ]
+
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF2RX1 cannot be found in library.
+        : Ensure that the proper library files are available and have been imported.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF2RX2 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF2X1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF2X2 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF4RX1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF4RX2 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF4X1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell DFF4X2 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL16 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL2 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL32 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL4 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL64 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FILL8 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FSWNX1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell FSWX1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell HSWDNX1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell HSWDX1 cannot be found in library.
+Warning : Physical cell not defined in library. [PHYS-279]
+        : The physical (LEF) cell HSWNX1 cannot be found in library.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'PHYS-279'.
+  Setting attribute of root '/': 'lef_library' = /home/tools/design_kits/cadence/GPDK045//gsclib045_svt_v4.4/gsclib045/lef/gsclib045_tech.lef /home/tools/design_kits/cadence/GPDK045//gsclib045_svt_v4.4/gsclib045/lef/gsclib045_macro.lef
+@file(tech.tcl) 52: set_db qrc_tech_file ${QRC_LIST}
+
+  According to qrc_tech_file, there are total 11 routing layers [ V(5) / H(6) ]
+
+  Setting attribute of root '/': 'qrc_tech_file' = /home/tools/design_kits/cadence/GPDK045//gpdk045_v_6_0/qrc/rcworst/qrcTechFile
+@file(tech.tcl) 56: get_db interconnect_mode
+@file(tech.tcl) 57: set_db interconnect_mode ple ;# global
+  Setting attribute of root '/': 'interconnect_mode' = ple
+@file(tech.tcl) 67: get_lib_cells
+@file(tech.tcl) 68: get_db lib_cells *SDFF*
+@file(tech.tcl) 69: get_db base_cell:SDFFRHQX1 .dont_use
+@file(tech.tcl) 70: set_db base_cell:SDFFRHQX1 .dont_use true
+  Setting attribute of base_cell 'SDFFRHQX1': 'dont_use' = true
+@file(tech.tcl) 72: foreach lc [get_db base_cells -if {.name == "SDFF*"}] {
+  get_db $lc .dont_use
+  set_db $lc .dont_use true
+}
+  Setting attribute of base_cell 'SDFFHQX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFHQX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFHQX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFHQX8': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFNSRX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFNSRX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFNSRX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFNSRXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFQX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFQX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFQX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFQXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRHQX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRHQX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRHQX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRHQX8': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFRXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSHQX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSHQX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSHQX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSHQX8': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRHQX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRHQX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRHQX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRHQX8': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSRXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFSXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFTRX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFTRX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFTRX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFTRXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFX4': 'dont_use' = true
+  Setting attribute of base_cell 'SDFFXL': 'dont_use' = true
+  Setting attribute of base_cell 'SDFF2RX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFF2RX2': 'dont_use' = true
+  Setting attribute of base_cell 'SDFF4RX1': 'dont_use' = true
+  Setting attribute of base_cell 'SDFF4RX2': 'dont_use' = true
+@file(tech.tcl) 78: foreach lc [get_db base_cells -if {.name == "TLATS*"}] {
+  get_db $lc .dont_use
+  set_db $lc .dont_use true
+}
+  Setting attribute of base_cell 'TLATSRX1': 'dont_use' = true
+  Setting attribute of base_cell 'TLATSRX2': 'dont_use' = true
+  Setting attribute of base_cell 'TLATSRX4': 'dont_use' = true
+  Setting attribute of base_cell 'TLATSRXL': 'dont_use' = true
+@file(tech.tcl) 83: if { $OP_CORNER eq "WORST" } {
+    puts "\n Setting WORST LIB! \n"
+    set_db [get_db library_domain *worst] .default true
+} else {
+    puts "\n Setting BEST LIB! \n"
+    set_db [get_db library_domain *best] .default true
+}
+
+ Setting WORST LIB! 
+
+  Setting attribute of library_domain 'worst': 'default' = true
+@file(tech.tcl) 96: get_db [get_db library_sets *worst] .libraries
+@file(tech.tcl) 97: get_db [get_db library_sets *best] .libraries
+@file(tech.tcl) 99: get_db [get_db library_sets *worst] .libraries.lib_cells
+@file(tech.tcl) 100: get_db [get_db library_sets *best] .libraries.lib_cells
+@file(tech.tcl) 102: get_db [get_db [get_db library_sets *worst] .libraries *slow_vdd1v0] .lib_cells
+@file(tech.tcl) 103: get_db [get_db [get_db library_sets *best] .libraries *fast_vdd1v2] .lib_cells 
+@file(tech.tcl) 105: get_db [get_db library_sets *worst] .libraries.lib_cells -regexp XOR
+@file(tech.tcl) 106: get_db [get_db library_sets *best] .libraries.lib_cells -regexp XOR
+@file(tech.tcl) 108: get_db [get_db [get_db library_sets *worst] .libraries.lib_cells -regexp CLKXOR2X1] .*
+Object: lib_cell:ls_of_ld_worst/slow_vdd1v0/CLKXOR2X1
+  area:                  2.736
+  area_multiplier:       1.0
+  async_clear_pins:      {}
+  async_preset_pins:     {}
+  avoid:                 false
+  backup_power_pins:     {}
+  base_cell:             base_cell:CLKXOR2X1
+  base_name:             CLKXOR2X1
+  bbox:                  {0.0 0.0 1.6 1.71}
+  bit_width:             1
+  bottom_padding:        0
+  cell_delay_multiplier:  1.0
+  cell_min_delay_multiplier:  1.0
+  clock_gating_integrated_cell:  {}
+  clock_pins:            {}
+  combinational:         true
+  congestion_avoid:      false
+  constraint_multiplier:  1.0
+  data_pins:             {}
+  dont_touch:            false
+  dont_use:              false
+  escaped_name:          ls_of_ld_worst/slow_vdd1v0/CLKXOR2X1
+  failure_probability:   0.0
+  has_lvf:               false
+  has_non_seq_setup_arc:  false
+  internal_power:        no_value
+  is_always_on:          false
+  is_black_box:          false
+  is_buffer:             false
+  is_clock_isolation_cell:  false
+  is_combinational:      true
+  is_dummy_scmr_iw_cell:  false
+  is_eeq_cell:           false
+  is_fall_edge_triggered:  false
+  is_fixed_mask:         false
+  is_flop:               false
+  is_inferred_macro:     false
+  is_integrated_clock_gating:  false
+  is_interface_timing:   false
+  is_inverter:           false
+  is_isolation_cell:     false
+  is_latch:              false
+  is_level_shifter:      false
+  is_macro:              false
+  is_master_eeq_cell:    false
+  is_master_slave_flop:  false
+  is_master_slave_lssd_flop:  false
+  is_memory:             false
+  is_negative_level_sensitive:  false
+  is_pad:                false
+  is_pll:                false
+  is_positive_level_sensitive:  false
+  is_power_switch:       false
+  is_retention:          false
+  is_rise_edge_triggered:  false
+  is_sequential:         false
+  is_timing_model:       false
+  is_tristate:           false
+  is_usable:             true
+  keep_as_physical:      false
+  latch_enable:          {}
+  latch_enable_pins:     {}
+  leakage_power:         0.0
+  leakage_scale_factor:  1.0
+  lef_inconsistent:      false
+  left_padding:          0
+  level_shifter_direction:  {}
+  level_shifter_type:    {}
+  level_shifter_valid_location:  {}
+  lib_arcs:              NC
+  lib_pins:              NC
+  liberty_attributes:    area 2.736 
+  library:               library:ls_of_ld_worst/slow_vdd1v0
+  master_physical_variant_cell:  {}
+  max_ground_input_voltage:  0.0
+  max_ground_output_voltage:  0.0
+  max_input_voltage:     0.0
+  max_output_voltage:    0.0
+  min_ground_input_voltage:  0.0
+  min_ground_output_voltage:  0.0
+  min_input_voltage:     0.0
+  min_output_voltage:    0.0
+  mode_definition:       NC
+  name:                  ls_of_ld_worst/slow_vdd1v0/CLKXOR2X1
+  obj_type:              lib_cell
+  pg_lib_pins:           NC
+  physical_variant_cells:  {}
+  power_gating_cell_type:  {}
+  preserve:              false
+  preserve_avoid:        false
+  primary_power:         {}
+  required_condition:    {}
+  right_padding:         0
+  scan_enable_pins:      {}
+  scan_in_pins:          {}
+  scan_out:              {}
+  scan_out_pins:         {}
+  seq_functions:         NC
+  sequential:            false
+  short:                 {}
+  std_cell_main_rail_pin:  pg_lib_pin:ls_of_ld_worst/slow_vdd1v0/CLKXOR2X1/VDD
+  switch_off_enables:    {}
+  switched_power:        {}
+  symmetry:              xy
+  sync_clear_pins:       {}
+  sync_enable_pins:      {}
+  sync_preset_pins:      {}
+  timing_model_reason:   {}
+  timing_model_type:     {}
+  top_padding:           0
+  tristate:              false
+  type_changed_pin_names:  {}
+  unusable_reason:       {}
+  usable_flop:           false
+  usable_latch:          false
+#@ End verbose source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis/scripts/common/tech.tcl
+@file(riscv_core.tcl) 67: set_db init_hdl_search_path ${FRONTEND_DIR}
+  Setting attribute of root '/': 'init_hdl_search_path' = /home/schultz/Documents/ARQIII_RiscV_Work/src/core {}
+@file(riscv_core.tcl) 76: read_hdl -language v2001 -f "${HDL_DIR}/filelist.flist"
+@file(riscv_core.tcl) 84: elaborate ${HDL_NAME}
+Info    : Elaborating Design. [ELAB-1]
+        : Elaborating top-level block 'riscv_core' from file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/riscv_core.v'.
+Warning : Using default parameter value for module elaboration. [CDFG-818]
+        : Elaborating block 'riscv_core' with default parameters value.
+Warning : Unreachable statements for case item. [CDFG-472]
+        : Case item 'default' in module 'biriscv_lsu_MEM_CACHE_ADDR_MIN32h80000000_MEM_CACHE_ADDR_MAX32h8fffffff' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_lsu.v' on line 208.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_mpriv_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 215.
+        : Genus removes the flip-flop or latch inferred for an unused signal or variable. To preserve the flip-flop or latch, set the hdl_preserve_unused_registers attribute to true or use a pragma in the RTL.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_medeleg_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 220.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_mideleg_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 221.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_sepc_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 227.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_stvec_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 228.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_scause_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 229.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_stval_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 230.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_satp_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 231.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_sscratch_r' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 232.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'csr_medeleg_q' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 253.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'csr_scause_q' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 259.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'csr_stval_q' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 260.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'csr_sscratch_q' in module 'biriscv_csr_regfile_SUPPORT_MTIMECMP1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v' on line 262.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_priv_r' in module 'biriscv_csr_SUPPORT_MULDIV1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr.v' on line 107.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused latch register 'csr_readonly_r' in module 'biriscv_csr_SUPPORT_MULDIV1_SUPPORT_SUPER0' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr.v' on line 108.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'result_e3_q' in module 'biriscv_multiplier' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_multiplier.v' on line 59.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'npc_e1_q' in module 'biriscv_pipe_ctrl_SUPPORT_LOAD_BYPASS1_SUPPORT_MUL_BYPASS1' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_pipe_ctrl.v' on line 144.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'npc_e2_q' in module 'biriscv_pipe_ctrl_SUPPORT_LOAD_BYPASS1_SUPPORT_MUL_BYPASS1' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_pipe_ctrl.v' on line 222.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'npc_wb_q' in module 'biriscv_pipe_ctrl_SUPPORT_LOAD_BYPASS1_SUPPORT_MUL_BYPASS1' in file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_pipe_ctrl.v' on line 348.
+Info    : Done Elaborating Design. [ELAB-3]
+        : Done elaborating 'riscv_core'.
+Checking for analog nets...
+Check completed for analog nets.
+Checking for source RTL...
+Check completed for source RTL.
+Running Unified Mux Engine Tricks...
+Completed Unified Mux Engine Tricks
+
+Stage: post_elab
+--------------------------------------------------------
+| Trick             | Accepts | Rejects | Runtime (ms) | 
+--------------------------------------------------------
+| ume_constant_bmux |       0 |       0 |         1.00 | 
+--------------------------------------------------------
+Starting clip mux common data inputs [v1.0] (stage: post_elab, startdef: riscv_core, recur: true)
+Completed clip mux common data inputs (accepts: 0, rejects: 0, runtime: 0.002s)
+Starting clip the non-user hierarchies [v2.0] (stage: post_elab, startdef: riscv_core, recur: true)
+Completed clip the non-user hierarchies (accepts: 0, rejects: 0, runtime: 0.000s)
+
+Stage: post_elab
+---------------------------------------------------------
+| Transform          | Accepts | Rejects | Runtime (ms) | 
+---------------------------------------------------------
+| hlo_clip_mux_input |       0 |       0 |         2.00 | 
+| hlo_clip           |       0 |       0 |         0.00 | 
+---------------------------------------------------------
+UM:   flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
+UM:*                                                                   elaborate
+@file(riscv_core.tcl) 85: set_top_module ${HDL_NAME}
+@file(riscv_core.tcl) 86: check_design -unresolved ${HDL_NAME}
+
+
+ 	 Check Design Report (c)
+	 ------------------- 
+
+  Unresolved References & Empty Modules
+  ------------------------------------- 
+No unresolved references in design 'riscv_core'
+
+No empty modules in design 'riscv_core'
+
+  Done Checking the design.
+@file(riscv_core.tcl) 87: get_db current_design
+@file(riscv_core.tcl) 88: check_library
+============================================================
+  Generated by:           Genus(TM) Synthesis Solution 21.18-s082_1
+  Generated on:           Oct 20 2025  06:29:47 pm
+  Module:                 riscv_core
+  Library domain:         worst
+    Domain index:         0
+    Technology library:   slow_vdd1v0 1.0
+  Library domain:         best
+    Domain index:         1
+    Technology library:   fast_vdd1v2 1.0
+  Operating conditions:   PVT_0P9V_125C 
+  Operating conditions:   PVT_1P32V_0C 
+  Interconnect mode:      global
+  Area mode:              physical library
+============================================================
+
+                                                                              
+==============================================================================
+Library Domain   Total cells   LS cell   ISO cell   Combo (LS+ISO)   SR Flops 
+------------------------------------------------------------------------------
+best(1.32)       426           0         0          0                0        
+worst(0.9)       426           0         0          0                0        
+------------------------------------------------------------------------------
+
+Unusable libcells
+=================
+                                                                              
+==============================================================================
+Library Domain   Total cells   LS cell   ISO cell   Combo (LS+ISO)   SR Flops 
+------------------------------------------------------------------------------
+best(1.32)       157           0         0          0                0        
+worst(0.9)       157           0         0          0                0        
+------------------------------------------------------------------------------
+@file(riscv_core.tcl) 94: read_sdc ${PROJECT_DIR}/Synthesis/constraints/${HDL_NAME}.sdc
+Statistics for commands executed by read_sdc:
+ "all_inputs"               - successful      5 , failed      0 (runtime  0.00)
+ "all_outputs"              - successful      2 , failed      0 (runtime  0.00)
+ "create_clock"             - successful      1 , failed      0 (runtime  0.01)
+ "current_design"           - successful      1 , failed      0 (runtime  0.01)
+ "get_clocks"               - successful      4 , failed      0 (runtime  0.00)
+ "get_nets"                 - successful      2 , failed      0 (runtime  0.00)
+ "get_ports"                - successful      7 , failed      0 (runtime  0.01)
+ "remove_from_collection"   - successful      5 , failed      0 (runtime  0.00)
+ "set_clock_latency"        - successful      1 , failed      0 (runtime  0.00)
+ "set_clock_uncertainty"    - successful      1 , failed      0 (runtime  0.00)
+ "set_ideal_net"            - successful      2 , failed      0 (runtime  0.01)
+ "set_input_delay"          - successful      1 , failed      0 (runtime  0.00)
+ "set_input_transition"     - successful      4 , failed      0 (runtime  0.05)
+ "set_load"                 - successful      1 , failed      0 (runtime  0.00)
+ "set_output_delay"         - successful      1 , failed      0 (runtime  0.00)
+read_sdc completed in 00:00:00 (hh:mm:ss)
+@file(riscv_core.tcl) 95: report timing -lint
+============================================================
+  Generated by:           Genus(TM) Synthesis Solution 21.18-s082_1
+  Generated on:           Oct 20 2025  06:29:48 pm
+  Module:                 riscv_core
+  Library domain:         worst
+    Domain index:         0
+    Technology library:   slow_vdd1v0 1.0
+  Library domain:         best
+    Domain index:         1
+    Technology library:   fast_vdd1v2 1.0
+  Operating conditions:   PVT_0P9V_125C 
+  Operating conditions:   PVT_1P32V_0C 
+  Interconnect mode:      global
+  Area mode:              physical library
+============================================================
+
+
+Lint summary
+ Unconnected/logic driven clocks                                  0
+ Sequential data pins driven by a clock signal                    0
+ Sequential clock pins without clock waveform                     0
+ Sequential clock pins with multiple clock waveforms              0
+ Generated clocks without clock waveform                          0
+ Generated clocks with incompatible options                       0
+ Generated clocks with multi-master clock                         0
+ Paths constrained with different clocks                          0
+ Loop-breaking cells for combinational feedback                   0
+ Nets with multiple drivers                                       0
+ Timing exceptions with no effect                                 0
+ Suspicious multi_cycle exceptions                                0
+ Pins/ports with conflicting case constants                       0
+ Inputs without clocked external delays                           0
+ Outputs without clocked external delays                          0
+ Inputs without external driver/transition                        0
+ Outputs without external load                                    0
+ Exceptions with invalid timing start-/endpoints                  0
+
+                                                  Total:          0
+@file(riscv_core.tcl) 100: set_db auto_ungroup both ;# (none|both) ungrouping will not be performed
+  Setting attribute of root '/': 'auto_ungroup' = both
+@file(riscv_core.tcl) 113: syn_generic ${HDL_NAME} 
+
+Stage: pre_early_cg
+------------------------------------------------
+| Transform | Accepts | Rejects | Runtime (ms) | 
+------------------------------------------------
+------------------------------------------------
+##Generic Timing Info for library domain: worst typical gate delay: 152.5 ps std_slew: 18.2 ps std_load: 1.0 fF
+Starting mux data reorder optimization [v1.0] (stage: pre_to_gen_setup, startdef: riscv_core, recur: true)
+Completed mux data reorder optimization (accepts: 0, rejects: 0, runtime: 0.050s)
+
+Stage: pre_to_gen_setup
+------------------------------------------------------
+| Transform       | Accepts | Rejects | Runtime (ms) | 
+------------------------------------------------------
+| hlo_mux_reorder |       0 |       0 |        50.00 | 
+------------------------------------------------------
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 587 sequential instances.
+        : Optimizations such as constant propagation or redundancy removal could change the connections so a hierarchical instance does not drive any primary outputs anymore. To see the list of deleted hierarchical instances, set the 'information_level' attribute to 2 or above. If the message is truncated set the message attribute 'truncate' to false to see the complete list. To prevent this optimization, set the 'delete_unloaded_insts' root/subdesign attribute to 'false' or 'preserve' instance attribute to 'true'.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 43 hierarchical instances.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_frontend/u_fetch/icache_invalidate_q_reg'.
+        : To prevent this optimization, set the 'optimize_constant_0_flops' root attribute to 'false' or 'optimize_constant_0_seq' instance attribute to 'false'. You can also see the complete list of deleted sequential with command "report sequential -deleted" (on Reason "constant0").
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/init_done_reg[2]'.
+Info    : Replacing a flip-flop with a logic constant 1. [GLO-13]
+        : The instance is 'u_csr/u_csrfile/irq_priv_q_reg[0]'.
+        : To prevent this optimization, set the 'optimize_constant_1_flops' root attribute to 'false' or 'optimize_constant_1_seq' instance attribute to 'false'.
+Info    : Replacing a flip-flop with a logic constant 1. [GLO-13]
+        : The instance is 'u_csr/u_csrfile/irq_priv_q_reg[1]'.
+Info    : Replacing a flip-flop with a logic constant 1. [GLO-13]
+        : The instance is 'u_csr/u_csrfile/csr_mpriv_q_reg[0]'.
+Info    : Replacing a flip-flop with a logic constant 1. [GLO-13]
+        : The instance is 'u_csr/u_csrfile/csr_mpriv_q_reg[1]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_mideleg_q_reg[7]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_mideleg_q_reg[11]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[0]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[1]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[2]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[3]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[4]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[5]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[6]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[7]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[8]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[9]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[10]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[11]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[12]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[13]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[14]'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_csr/u_csrfile/csr_sepc_q_reg[15]'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'GLO-12'.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 166 sequential instances.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 6 hierarchical instances.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 6 hierarchical instances.
+Current PLE settings:
+
+Aspect ratio        : 1.000
+Shrink factor       : 1.000
+Scale of res/length : 1.000
+Scale of cap/length : 1.000
+Net derating factor : 1.000
+Thermal factor      : 1.324
+Via Resistance      : 0.600 ohm (from qrc_tech_file)
+Site size           : 1.910 um (from lef [tech+cell])
+
+                                    Capacitance  
+   Layer                             / Length         Data source:
+ Name        Direction Utilization  (pF/micron)       qrc_tech_file
+-------------------------------------------------
+metal1_conn      H         0.00        0.000367  
+metal2_conn      V         1.00        0.000317  
+metal3_conn      H         1.00        0.000315  
+metal4_conn      V         1.00        0.000317  
+metal5_conn      H         1.00        0.000317  
+metal6_conn      V         1.00        0.000318  
+metal7_conn      H         1.00        0.000318  
+metal8_conn      V         1.00        0.000315  
+metal9_conn      H         1.00        0.001755  
+metal10_conn     V         1.00        0.000854  
+metal11_conn     H         1.00        0.000739  
+
+                                     Resistance   
+   Layer                              / Length         Data source:
+ Name        Direction Utilization  (ohm/micron)       qrc_tech_file
+--------------------------------------------------
+metal1_conn      H         0.00         1.900028  
+metal2_conn      V         1.00         1.183743  
+metal3_conn      H         1.00         1.183743  
+metal4_conn      V         1.00         1.183743  
+metal5_conn      H         1.00         1.183743  
+metal6_conn      V         1.00         1.183743  
+metal7_conn      H         1.00         1.183743  
+metal8_conn      V         1.00         0.432387  
+metal9_conn      H         1.00         0.432387  
+metal10_conn     V         1.00         0.157232  
+metal11_conn     H         1.00         0.158932  
+
+                                         Area     
+   Layer                               / Length        Data source:
+ Name        Direction Utilization     (micron)        lef_library
+--------------------------------------------------
+Metal1           H         0.00         0.060000  
+Metal2           V         1.00         0.080000  
+Metal3           H         1.00         0.080000  
+Metal4           V         1.00         0.080000  
+Metal5           H         1.00         0.080000  
+Metal6           V         1.00         0.080000  
+Metal7           H         1.00         0.080000  
+Metal8           V         1.00         0.080000  
+Metal9           H         1.00         0.080000  
+Metal10          V         1.00         0.220000  
+Metal11          H         1.00         0.220000  
+
+Info    : Synthesizing. [SYNTH-1]
+        : Synthesizing 'riscv_core' to generic gates using 'medium' effort.
+Running Synthesis Turbo Flow Version 1.
+PBS_Generic-Start - Elapsed_Time 0, CPU_Time 0.0
+stamp 'PBS_Generic-Start' being created for table 'pbs_debug'
+
+  Total Time (Wall) |  Stage Time (Wall)  |   % (Wall)   |    Date - Time     |  Memory   | Stage
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 00:00:21(00:00:17) |  00:00:00(00:00:00) |   0.0(  0.0) |   18:29:50 (Oct20) |  666.2 MB | PBS_Generic-Start
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+Number of threads: 8 * 1   (id: pbs_debug, time_info v1.57)
+Info: (*N*) indicates data that was populated from previously saved time_info database
+Info: CPU time includes time of parent + longest thread
+TNS Restructuring config: no_value at stage: generic applied.
+Info    : Partition Based Synthesis execution skipped. [PHYS-752]
+        : Design size is less than the partition size '100000' for distributed generic optimization to kick in.
+Starting mux data reorder optimization [v1.0] (stage: pre_to_gen_setup, startdef: riscv_core, recur: true)
+Completed mux data reorder optimization (accepts: 0, rejects: 0, runtime: 0.071s)
+
+Stage: pre_to_gen_setup
+------------------------------------------------------
+| Transform       | Accepts | Rejects | Runtime (ms) | 
+------------------------------------------------------
+| hlo_mux_reorder |       0 |       0 |        71.00 | 
+------------------------------------------------------
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 4 hierarchical instances.
+Starting mux data reorder optimization [v1.0] (stage: post_to_gen_setup, startdef: riscv_core, recur: true)
+Completed mux data reorder optimization (accepts: 0, rejects: 0, runtime: 0.040s)
+
+Stage: post_to_gen_setup
+------------------------------------------------------
+| Transform       | Accepts | Rejects | Runtime (ms) | 
+------------------------------------------------------
+| hlo_mux_reorder |       0 |       0 |        40.00 | 
+------------------------------------------------------
+Current PLE settings:
+
+Aspect ratio        : 1.000
+Shrink factor       : 1.000
+Scale of res/length : 1.000
+Scale of cap/length : 1.000
+Net derating factor : 1.000
+Thermal factor      : 1.324
+Via Resistance      : 0.600 ohm (from qrc_tech_file)
+Site size           : 1.910 um (from lef [tech+cell])
+
+                                    Capacitance  
+   Layer                             / Length         Data source:
+ Name        Direction Utilization  (pF/micron)       qrc_tech_file
+-------------------------------------------------
+metal1_conn      H         0.00        0.000367  
+metal2_conn      V         1.00        0.000317  
+metal3_conn      H         1.00        0.000315  
+metal4_conn      V         1.00        0.000317  
+metal5_conn      H         1.00        0.000317  
+metal6_conn      V         1.00        0.000318  
+metal7_conn      H         1.00        0.000318  
+metal8_conn      V         1.00        0.000315  
+metal9_conn      H         1.00        0.001755  
+metal10_conn     V         1.00        0.000854  
+metal11_conn     H         1.00        0.000739  
+
+                                     Resistance   
+   Layer                              / Length         Data source:
+ Name        Direction Utilization  (ohm/micron)       qrc_tech_file
+--------------------------------------------------
+metal1_conn      H         0.00         1.900028  
+metal2_conn      V         1.00         1.183743  
+metal3_conn      H         1.00         1.183743  
+metal4_conn      V         1.00         1.183743  
+metal5_conn      H         1.00         1.183743  
+metal6_conn      V         1.00         1.183743  
+metal7_conn      H         1.00         1.183743  
+metal8_conn      V         1.00         0.432387  
+metal9_conn      H         1.00         0.432387  
+metal10_conn     V         1.00         0.157232  
+metal11_conn     H         1.00         0.158932  
+
+                                         Area     
+   Layer                               / Length        Data source:
+ Name        Direction Utilization     (micron)        lef_library
+--------------------------------------------------
+Metal1           H         0.00         0.060000  
+Metal2           V         1.00         0.080000  
+Metal3           H         1.00         0.080000  
+Metal4           V         1.00         0.080000  
+Metal5           H         1.00         0.080000  
+Metal6           V         1.00         0.080000  
+Metal7           H         1.00         0.080000  
+Metal8           V         1.00         0.080000  
+Metal9           H         1.00         0.080000  
+Metal10          V         1.00         0.220000  
+Metal11          H         1.00         0.220000  
+
+Running Unified Mux Engine Tricks...
+Completed Unified Mux Engine Tricks
+
+Stage: pre_hlo_rtlopt
+--------------------------------------------
+| Trick | Accepts | Rejects | Runtime (ms) | 
+--------------------------------------------
+--------------------------------------------
+Starting infer macro optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 4 hierarchical instances.
+Completed infer macro optimization (accepts: 1, rejects: 184, runtime: 0.098s)
+Starting decode mux sandwich optimization [v2.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed decode mux sandwich optimization (accepts: 0, rejects: 0, runtime: 0.001s)
+Starting decode mux optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed decode mux optimization (accepts: 0, rejects: 0, runtime: 0.000s)
+Starting chop wide muxes [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed chop wide muxes (accepts: 0, rejects: 0, runtime: 0.001s)
+Starting common data mux cascade opt [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed common data mux cascade opt (accepts: 0, rejects: 0, runtime: 0.003s)
+Starting mux input consolidation [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed mux input consolidation (accepts: 0, rejects: 0, runtime: 0.007s)
+Starting constant-data mux optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed constant-data mux optimization (accepts: 0, rejects: 0, runtime: 0.002s)
+Starting chain-to-tree inequality transform [v2.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed chain-to-tree inequality transform (accepts: 0, rejects: 0, runtime: 0.091s)
+Starting reconvergence optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed reconvergence optimization (accepts: 0, rejects: 0, runtime: 0.002s)
+Starting logic restructure optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed logic restructure optimization (accepts: 0, rejects: 0, runtime: 0.010s)
+Starting common select mux optimization [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed common select mux optimization (accepts: 0, rejects: 2, runtime: 0.007s)
+Starting identity transform [v3.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed identity transform (accepts: 0, rejects: 0, runtime: 0.010s)
+Starting reduce operator chain [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed reduce operator chain (accepts: 0, rejects: 0, runtime: 0.001s)
+Starting common data mux cascade opt [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed common data mux cascade opt (accepts: 0, rejects: 0, runtime: 0.003s)
+Starting mux input consolidation [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed mux input consolidation (accepts: 0, rejects: 0, runtime: 0.007s)
+Starting optimize datapath elements [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed optimize datapath elements (accepts: 98, rejects: 0, runtime: 0.106s)
+Starting datapath recasting [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed datapath recasting (accepts: 0, rejects: 0, runtime: 0.001s)
+Starting clip mux common data inputs [v1.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed clip mux common data inputs (accepts: 9, rejects: 0, runtime: 0.005s)
+Starting clip the non-user hierarchies [v2.0] (stage: pre_rtlopt, startdef: riscv_core, recur: true)
+Completed clip the non-user hierarchies (accepts: 0, rejects: 0, runtime: 0.001s)
+
+Stage: pre_rtlopt
+----------------------------------------------------------------
+| Transform                 | Accepts | Rejects | Runtime (ms) | 
+----------------------------------------------------------------
+| hlo_infer_macro           |       1 |     184 |        98.00 | 
+| hlo_decode_mux_sandwich   |       0 |       0 |         1.00 | 
+| hlo_mux_decode            |       0 |       0 |         0.00 | 
+| hlo_chop_mux              |       0 |       0 |         1.00 | 
+| hlo_mux_cascade_opt       |       0 |       0 |         3.00 | 
+| hlo_mux_consolidation     |       0 |       0 |         7.00 | 
+| hlo_constant_mux_opt      |       0 |       0 |         2.00 | 
+| hlo_inequality_transform  |       0 |       0 |        91.00 | 
+| hlo_reconv_opt            |       0 |       0 |         2.00 | 
+| hlo_restructure           |       0 |       0 |        10.00 | 
+| hlo_common_select_muxopto |       0 |       2 |         7.00 | 
+| hlo_identity_transform    |       0 |       0 |        10.00 | 
+| hlo_reduce_operator_chain |       0 |       0 |         1.00 | 
+| hlo_mux_cascade_opt       |       0 |       0 |         3.00 | 
+| hlo_mux_consolidation     |       0 |       0 |         7.00 | 
+| hlo_optimize_datapath     |      98 |       0 |       106.00 | 
+| hlo_datapath_recast       |       0 |       0 |         1.00 | 
+| hlo_clip_mux_input        |       9 |       0 |         5.00 | 
+| hlo_clip                  |       0 |       0 |         1.00 | 
+----------------------------------------------------------------
+Running Unified Mux Engine Tricks...
+Completed Unified Mux Engine Tricks
+
+Stage: post_hlo_rtlopt
+--------------------------------------------------
+| Trick       | Accepts | Rejects | Runtime (ms) | 
+--------------------------------------------------
+| ume_runtime |       0 |       0 |         1.00 | 
+--------------------------------------------------
+Number of big hc bmuxes before = 10
+Number of non-ctl's : 23
+g43 g44 g410 g411 g412 g413 mux_alu_func_r_95_26 mux_alu_func_r_155_31 mux_alu_func_r_191_31 mux_alu_func_r_209_31 mux_alu_input_a_r_95_26 mux_alu_input_a_r_155_31 mux_alu_input_a_r_191_31 mux_alu_input_a_r_209_31 mux_alu_input_b_r_95_26 mux_alu_input_b_r_155_31 mux_alu_input_b_r_191_31 mux_alu_input_b_r_209_31 mux_branch_r_318_31 mux_alu_func_r_155_51 mux_alu_func_r_219_418 mux_branch_r_310_420 mux_branch_taken_r_310_422 
+SOP DEBUG : Module= biriscv_exec, Cluster= ctl_95_26, ctl= 9, Non-ctl= 23
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster ctl_95_26.
+Number of non-ctl's : 9
+mux_mem_data_r_193_15 mux_mem_data_r_208_15 mux_mem_wr_r_193_15 mux_mem_wr_r_208_15 mux_mem_data_r_191_1588 mux_mem_wr_r_191_1594 mux_mem_data_r_206_1590 mux_mem_wr_r_206_1596 mux_mem_wr_r_186_1592 
+SOP DEBUG : Module= biriscv_lsu_MEM_CACHE_ADDR_MIN32h80000000_MEM_CACHE_ADDR_MAX32h8fffffff, Cluster= ctl_mem_addr_r_193_15, ctl= 7, Non-ctl= 9
+Selected impl_type 0 (ctl + 1-hot mux form) for sop cluster ctl_mem_addr_r_193_15.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 36 sequential instances.
+Info    : Pre-processed datapath logic. [DPOPT-6]
+        : Pre-processing optimizations applied to datapath logic in 'riscv_core':
+          live_trim(10) sop(2) output_trim(1) 
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 31 sequential instances.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 1 hierarchical instance.
+Info    : Optimizing datapath logic. [DPOPT-1]
+        : Optimizing datapath logic in 'riscv_core'.
+Info    : Implementing datapath configurations. [DPOPT-3]
+        : Implementing datapath configurations for 'CDN_DP_region_3_5'
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c1 in riscv_core':
+	  (u_exec0_lt_351_46, u_exec0_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c1 in riscv_core':
+	  (u_exec1_lt_351_46, u_exec1_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c1 in riscv_core':
+	  (u_div_minus_175_39, u_div_minus_173_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c1 in riscv_core':
+	  (u_exec0_add_322_51, u_exec0_add_308_35, u_exec0_add_314_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c1 in riscv_core':
+	  (u_exec1_add_322_51, u_exec1_add_308_35, u_exec1_add_314_39)
+
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+PORT: <0> {
+  4  : 1'b0
+  3  : 1'b0
+  2  : 1'b0
+  1  : 1'b0
+  0  : 1'b0
+}
+Number of non-ctl's : 2
+g3917 u_exec0_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c1, Cluster= u_exec0_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec0_ctl_318_31_create.
+Number of non-ctl's : 2
+g3919 u_exec1_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c1, Cluster= u_exec1_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec1_ctl_318_31_create.
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_exec0_lt_351_46, u_exec0_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_exec1_lt_351_46, u_exec1_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_div_minus_175_39, u_div_minus_173_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_div_sub_159_34, u_div_minus_135_27)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_exec0_add_322_51, u_exec0_add_308_35, u_exec0_add_314_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_exec1_add_322_51, u_exec1_add_308_35, u_exec1_add_314_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_issue_add_213_22, u_issue_add_211_22)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c2 in riscv_core':
+	  (u_lsu_add_177_42, u_lsu_add_175_42)
+
+Number of non-ctl's : 2
+g3917 u_exec0_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c2, Cluster= u_exec0_ctl_318_31_create, ctl= 1, Non-ctl= 2
+Selected impl_type 0 (ctl + 1-hot mux form) for sop cluster u_exec0_ctl_318_31_create.
+Number of non-ctl's : 2
+g3919 u_exec1_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c2, Cluster= u_exec1_ctl_318_31_create, ctl= 1, Non-ctl= 2
+Selected impl_type 0 (ctl + 1-hot mux form) for sop cluster u_exec1_ctl_318_31_create.
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_exec0_lt_351_46, u_exec0_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_exec1_lt_351_46, u_exec1_gte_356_46)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_div_minus_175_39, u_div_minus_173_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_div_sub_159_34, u_div_minus_135_27)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_exec0_add_322_51, u_exec0_add_308_35, u_exec0_add_314_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_exec1_add_322_51, u_exec1_add_308_35, u_exec1_add_314_39)
+
+Info    : Accepted resource sharing opportunity. [RTLOPT-30]
+        : Merged the following sets of instances in 'CDN_DP_region_3_5_c3 in riscv_core':
+	  (u_issue_add_213_22, u_issue_add_211_22)
+
+Number of non-ctl's : 2
+g3917 u_exec0_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c3, Cluster= u_exec0_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec0_ctl_318_31_create.
+Number of non-ctl's : 2
+g3919 u_exec1_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c3, Cluster= u_exec1_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec1_ctl_318_31_create.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'RTLOPT-30'.
+Number of non-ctl's : 2
+g3917 u_exec0_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c4, Cluster= u_exec0_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec0_ctl_318_31_create.
+Number of non-ctl's : 2
+g3919 u_exec1_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c4, Cluster= u_exec1_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec1_ctl_318_31_create.
+Number of non-ctl's : 2
+g3917 u_exec0_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c5, Cluster= u_exec0_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec0_ctl_318_31_create.
+Number of non-ctl's : 2
+g3919 u_exec1_mux_branch_taken_r_318_31 
+SOP DEBUG : Module= CDN_DP_region_3_5_c5, Cluster= u_exec1_ctl_318_31_create, ctl= 1, Non-ctl= 2
+implTypeToString() API needs to be updated for implementation 105
+Selected impl_type 105 (Unknown) for sop cluster u_exec1_ctl_318_31_create.
