@@ -1,6 +1,6 @@
 ROOT       = $(CURDIR)
 RTL_DIR    = ${ROOT}/src/core
-TESTS_DIR  = ${ROOT}/tb/tb_top
+TESTS_DIR  = ${ROOT}/tb
 GUI        ?= 0
 TB         ?= 1
 FLAGS += -access +rwc
@@ -19,7 +19,7 @@ Comparator:
 ControlPath:
 	cd ${ROOT}/Work && \
 	if [ "$(TB)" = "0" ]; then \
-		xrun -v2001  ${RTL_DIR}/ControlPath.v $(FLAGS); \
+		xrun -v2001  ${RTL_DIR}/ControlPath.v $(FLAGS) ; \
 	else \
 		xrun -v2001 ${RTL_DIR}/Described_HDLs/ControlPath.v ${TESTS_DIR}/ControlPath_tb.sv $(FLAGS); \
 	fi
@@ -31,9 +31,9 @@ DataPath:
 Top:
 	cd ${ROOT}/Synthesis/work && \
 	if [ "$(TB)" = "0" ]; then \
-		xrun -v2001 -v93 -f ${RTL_DIR}/filelist.flist $(FLAGS); \
+		xrun -v2001 -v93 -f ${RTL_DIR}/filelist_xcelium.flist $(FLAGS) -incdir ../../src/core/; \
 	else \
-		xrun -v2001 -v93 -f ${RTL_DIR}/filelist.flist ${RTL_DIR}/BubbleSort_tb.sv $(FLAGS); \
+		xrun -v2001 -v93 -f ${TESTS_DIR}/tb_core_icarus/filelist.flist $(FLAGS) -incdir ../../src/core/; \
 	fi
 
 

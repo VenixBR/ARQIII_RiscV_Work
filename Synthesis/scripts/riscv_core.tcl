@@ -73,7 +73,7 @@ set_db init_hdl_search_path ${FRONTEND_DIR}
 ## ...
 ## read_hdl -language ${HDL_LANG} filename_3
 
-read_hdl -language v2001 -f "${HDL_DIR}/filelist.flist"
+read_hdl -language v2001 -f "${HDL_DIR}/filelist_genus.flist"
 
 
 
@@ -93,12 +93,15 @@ check_library
 #-----------------------------------------------------------------------------
 read_sdc ${PROJECT_DIR}/Synthesis/constraints/${HDL_NAME}.sdc
 report timing -lint
+report_timing -lint > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_timing_lint.rpt
 
 #-----------------------------------------------------------------------------
 # Pos "Elaborate" Attributes (manually set)
 #-----------------------------------------------------------------------------
 set_db auto_ungroup both ;# (none|both) ungrouping will not be performed
 
+set_db hinst:riscv_core/u_mul .ungroup_ok false
+set_db hinst:riscv_core/u_div .ungroup_ok false
 
 ## Layout Error Solved
 # foreach lc [get_db base_cells -if {.site == "*CoreSiteDouble*"}] {
@@ -123,11 +126,13 @@ get_db insts .base_cell.name -u ;# List all cell names used in the current desig
 # Preparing and generating output data (reports, verilog netlist)
 #-----------------------------------------------------------------------------
 report_design_rules ;# > ${RPT_DIR}/${HDL_NAME}_drc.rpt
-report_area -detail > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_area.rpt
+report_area -detail > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_area_detail.rpt
 report_timing > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_timing.rpt
 report_gates > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_gates.rpt
 report_qor > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_qor.rpt
 report_power -unit uW > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_power_no_vcd.rpt
+report_area > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_area.rpt
+report_hierarchy > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_hierarchy.rpt
 
 # set fp [open "${RPT_DIR}/lp_computed_probability_a1_no_vcd.rpt" "w"]
 # puts $fp [get_db hnet:a_i[1] .lp_computed_probability]

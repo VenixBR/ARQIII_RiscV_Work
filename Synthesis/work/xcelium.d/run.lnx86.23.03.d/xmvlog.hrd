@@ -3,3 +3,5 @@
 // Do not modify this file
 //
 -v2001
+-INCDIR
+../../src/core/

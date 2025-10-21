@@ -5,7 +5,8 @@
 -v2001
 -v93
 -f
-/home/schultz/Documents/ARQIII_Works/ACTV_05_Sort/HDL/filelist.flist
-/home/schultz/Documents/ARQIII_Works/ACTV_05_Sort/HDL/BubbleSort_tb.sv
+/home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist
 -access
 +rwc
+-incdir
+../../src/core/
