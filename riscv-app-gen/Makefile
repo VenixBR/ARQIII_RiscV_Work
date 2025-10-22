@@ -1,10 +1,10 @@
 
 SRC ?= main.c
 
-CC = riscv64-unknown-elf-gcc
-OBJDUMP = riscv64-unknown-elf-objdump
-READELF = riscv64-unknown-elf-readelf
-OBJCOPY = riscv64-unknown-elf-objcopy
+CC = /opt/riscv/bin/riscv32-unknown-elf-gcc
+OBJDUMP = /opt/riscv/bin/riscv32-unknown-elf-objdump
+READELF = /opt/riscv/bin/riscv32-unknown-elf-readelf
+OBJCOPY = /opt/riscv/bin/riscv32-unknown-elf-objcopy
 
 CFLAGS = -march=rv32im -mabi=ilp32
 GCC_LDFLAGS = -T link.ld -nostartfiles -e main -O2
