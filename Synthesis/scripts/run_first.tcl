@@ -7,12 +7,12 @@
 
 
 # Para executar o GENUS
-cd ${PROJECT_DIR}/Synthesis/work
+cd ${SYNTHESIS_DIR_DIR}/work
 echo "${PROJECT_DIR}"
 ## apenas o programa
 #genus -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite
 # programa e carrega script para síntese automatizada
-genus -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite -files ${PROJECT_DIR}/Synthesis/scripts/${DESIGNS}.tcl
+genus -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite -files ${SYNTHESIS_DIR}/scripts/${DESIGNS}.tcl
 
 
 

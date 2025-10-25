@@ -3,6 +3,7 @@ RTL_DIR    = ${ROOT}/src/core
 TESTS_DIR  = ${ROOT}/tb
 GUI        ?= 0
 TB         ?= 1
+MUL        ?= 0
 FLAGS += -access +rwc
 ifeq ($(GUI),1)
 	FLAGS += -gui
@@ -51,8 +52,13 @@ Top:
 ###################################################
 
 # Design top name (Top module name and filename must be the same)
+ifeq ($(MUL),0)
 DESIGNS := riscv_core
+else
+DESIGNS := biriscv_multiplier
+endif
 export DESIGNS
+
 
 # Username
 USER := $(shell whoami)
@@ -77,7 +83,11 @@ PROJECT_DIR := $(CURDIR)
 export PROJECT_DIR
 
 ## Logic synthesis directory
+ifeq ($(MUL),0)
 SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis
+else
+SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis_mul
+endif
 export SYNTHESIS_DIR
 
 ## Technology directory
@@ -138,7 +148,7 @@ EXTRA_ARGS ?=
 
 ## Run Logic Synthesis
 run-synth:
-	./Synthesis/scripts/run_first.tcl
+	$(SYNTHESIS_DIR)/scripts/run_first.tcl
 
 ## Compile SDF
 compile-sdf:

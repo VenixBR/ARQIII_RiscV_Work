@@ -1,0 +1,22 @@
+xrun: 23.03-s005: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
+TOOL:	xrun	23.03-s005: Started on Oct 25, 2025 at 01:30:43 -03
+xrun
+	-v2001
+	/home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
+	/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
+	-access +rwc
+	-gui
+	+define+CLA4x4
+xmsim: *W,NOMTDGUI: Multi-Threaded Dumping is disabled for interactive debug mode.
+
+-------------------------------------
+Relinquished control to SimVision...
+xcelium> 
+xcelium> source /home/tools/cadence/installs/XCELIUM2303/tools/xcelium/files/xmsimrc
+xcelium> database -open waves -into waves.shm -default
+Created default SHM database waves
+xcelium> probe -create -shm new_multiplier_tb.DUV.A_ext_S2_s new_multiplier_tb.DUV.A_inverted_S1_s new_multiplier_tb.DUV.A_sft_S2_s new_multiplier_tb.DUV.Add_L1_S2_s new_multiplier_tb.DUV.Add_L2_S2_s new_multiplier_tb.DUV.Add_L3_S3_s new_multiplier_tb.DUV.Add_L4_S3_s new_multiplier_tb.DUV.Add_L5_S3_s new_multiplier_tb.DUV.B_inverted_S1_s new_multiplier_tb.DUV.B_msb_S1_s new_multiplier_tb.DUV.B_sig_or_unsig_S1_s new_multiplier_tb.DUV.clk_i new_multiplier_tb.DUV.ext_A_S1_s new_multiplier_tb.DUV.ext_B_S1_s new_multiplier_tb.DUV.funct3_s new_multiplier_tb.DUV.hold_i new_multiplier_tb.DUV.mux_a_S1_s new_multiplier_tb.DUV.opcode_opcode_i new_multiplier_tb.DUV.opcode_ra_operand_i new_multiplier_tb.DUV.opcode_rb_operand_i new_multiplier_tb.DUV.opcode_valid_i new_multiplier_tb.DUV.rst_i new_multiplier_tb.DUV.upper_S1_s new_multiplier_tb.DUV.writeback_value_o
+Created probe 1
+xcelium> run 10
+Ran until 10 NS + 0
+xcelium> 
