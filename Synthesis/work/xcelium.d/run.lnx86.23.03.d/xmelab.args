@@ -2,7 +2,7 @@
 // File created by:  xrun
 // Do not modify this file
 //
--V93
++define+CLA4x4
 -ACCESS
 +rwc
 -no_analogsolver

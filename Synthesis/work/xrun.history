@@ -48,3 +48,38 @@ s47(20Oct2025:22:44:52):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_Ris
 s48(20Oct2025:22:46:38):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -incdir ../../src/core/ 
 s49(20Oct2025:22:46:57):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
 s50(20Oct2025:22:52:48):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
+s51(21Oct2025:13:49:17):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/src/core/filelist_xcelium.flist -access +rwc -incdir ../../src/core/ 
+s52(21Oct2025:13:49:21):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -incdir ../../src/core/ 
+s53(21Oct2025:13:49:28):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
+s54(22Oct2025:14:06:48):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
+s55(22Oct2025:14:07:38):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
+s56(22Oct2025:14:24:13):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ "-s " 
+s57(22Oct2025:16:48:05):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ 
+s58(22Oct2025:16:52:12):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ "-s " 
+s59(22Oct2025:17:05:46):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ -s 
+s60(22Oct2025:17:08:27):  xrun -v2001 -v93 -f /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/filelist.flist -access +rwc -gui -incdir ../../src/core/ -s 
+s61(25Oct2025:00:47:10):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/Described_HDLs/Comparator_pipe.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/Comparator_tb.sv -access +rwc +define+CLA4x4 
+s62(25Oct2025:00:47:23):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v -access +rwc 
+s63(25Oct2025:00:47:49):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v -access +rwc 
+s64(25Oct2025:00:48:22):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s65(25Oct2025:00:49:51):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s66(25Oct2025:00:50:48):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s67(25Oct2025:00:51:18):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s68(25Oct2025:00:51:38):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s69(25Oct2025:00:53:12):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s70(25Oct2025:00:55:33):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s71(25Oct2025:00:55:40):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s72(25Oct2025:01:01:14):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s73(25Oct2025:01:01:18):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s74(25Oct2025:01:02:41):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s75(25Oct2025:01:02:44):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s76(25Oct2025:01:12:04):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s77(25Oct2025:01:12:08):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s78(25Oct2025:01:16:49):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s79(25Oct2025:01:23:54):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s80(25Oct2025:01:24:03):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s81(25Oct2025:01:24:37):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s82(25Oct2025:01:24:48):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 
+s83(25Oct2025:01:29:50):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s84(25Oct2025:01:30:06):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s85(25Oct2025:01:30:43):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc -gui +define+CLA4x4 

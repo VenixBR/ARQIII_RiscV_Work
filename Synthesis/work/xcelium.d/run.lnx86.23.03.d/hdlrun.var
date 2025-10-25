@@ -87,4 +87,4 @@ define VIEW_MAP ( $VIEW_MAP \
 , .SVMS => SVMS \
 )
 define ELAB_SNAPSHOT
-define SNAPSHOT worklib.biriscv_trace_sim:v
+define SNAPSHOT worklib.new_multiplier_tb:sv

@@ -2,26 +2,5 @@
 // File created by:  xrun
 // Do not modify this file
 //
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_defs.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_alu.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr_regfile.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_csr.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_decoder.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_decode.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_divider.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_exec.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_fetch.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_frontend.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_issue.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_lsu.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_mmu.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_multiplier.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_npc.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_pipe_ctrl.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_regfile.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/biriscv_trace_sim.v
-/home/schultz/Documents/ARQIII_RiscV_Work/src/core/riscv_core.v
-/home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tcm_mem_ram.v
-/home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tcm_mem.v
-/home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/biriscv_trace_sim_gls.sv
-/home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tb_top.v
+/home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
+/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
