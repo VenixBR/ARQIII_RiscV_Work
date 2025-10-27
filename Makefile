@@ -12,9 +12,9 @@ endif
 Multiplier:
 	cd ${ROOT}/Synthesis/work && \
 	if [ "$(TB)" = "0" ]; then \
-		xrun -v2001 ${RTL_DIR}/new_multiplier.v $(FLAGS); \
+		xrun -v2001 ${RTL_DIR}/radix_multiplier.v $(FLAGS); \
 	else \
-		xrun -v2001 ${RTL_DIR}/new_multiplier.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
+		xrun -v2001 ${RTL_DIR}/radix_multiplier.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
 	fi
 
 ControlPath:
