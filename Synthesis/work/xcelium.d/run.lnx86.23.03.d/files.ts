@@ -25,6 +25,6 @@
 1760728501 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tcm_mem_ram.v
 1760728501 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tcm_mem.v
 1760728501 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/biriscv_trace_sim_gls.sv
-1761163699 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tb_top.v
-1761366583 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
-1761366604 /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
+1761367570 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tb_top.v
+1761768248 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
+1761746769 /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv

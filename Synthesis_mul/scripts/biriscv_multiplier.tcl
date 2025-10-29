@@ -73,6 +73,7 @@ set_db init_hdl_search_path ${FRONTEND_DIR}
 ## ...
 ## read_hdl -language ${HDL_LANG} filename_3
 
+read_hdl -language v2001 "${HDL_DIR}/biriscv_defs.v"
 read_hdl -language v2001 "${HDL_DIR}/new_multiplier.v"
 
 

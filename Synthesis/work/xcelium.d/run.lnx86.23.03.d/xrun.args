@@ -4,7 +4,5 @@
 //
 -v2001
 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
-/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
 -access
 +rwc
-+define+CLA4x4

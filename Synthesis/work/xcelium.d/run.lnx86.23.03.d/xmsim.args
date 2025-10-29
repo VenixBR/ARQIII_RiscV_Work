@@ -2,13 +2,11 @@
 // File created by:  xrun
 // Do not modify this file
 //
-+define+CLA4x4
--gui
 -MESSAGES
 +EMGRLOG
 xrun.log
 -XLSTIME
-1761366643
+1761768257
 -XLKEEP
 -XLMODE
 ./xcelium.d/run.lnx86.23.03.d
