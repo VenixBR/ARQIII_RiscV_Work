@@ -37,43 +37,27 @@ module biriscv_multiplier
     localparam MULHSU = 3'b010;
     localparam MULHU  = 3'b011;
 
-    // Stage 1 Signals
-    wire [2:0] funct3_s;             // Funct3 of opcode
-    reg ext_A_S1_s;                  // Indicate if A needs be extended
-    reg ext_B_S1_s;                  // Indicate if B needs be extended
-    reg upper_S1_s;                  // Indicate if the output will be the lower or upper part of answer
-    wire [31:0] mux_a_S1_s [31:0];   // 32 Mux to select between A or 0
-    wire B_msb_S1_s;                 // MSB of A
-    wire B_sig_or_unsig_S1_s;        // Set if B is signed or unsigned
-    reg  [31:0] B_inverted_S1_s;            // Store B inverted
-    reg  [31:0] A_inverted_S1_s;            // Store A inverted
-    reg  [63:0] Stage1_s [31:0];
-    reg  [63:0] Stage2_s [3:0];
-    reg Reg_upper_S1_s;
-    reg Reg_upper_S2_s;
+    reg sig_A_S1_s;
+    reg sig_B_S1_s;
+    reg upper_S1_s;
 
-    // Stage 2 Signals
-    wire [63:0] A_ext_S2_s [31:0];
-    wire [63:0] A_sft_S2_s [31:0];
-    wire [63:0] Add_L1_S2_s [15:0];
-    wire [63:0] Add_L2_S2_s [7:0];
-
-    // Stage 3 signals
-    wire [63:0] Add_L3_S3_s [3:0];
-    wire [63:0] Add_L4_S3_s [1:0];
-    wire [63:0] Add_L5_S3_s;
-
-    /*#####################################################################
-    ##                                                                   ##
-    ##    ######  ########  #######  ########  #######      ####         ##
-    ##    ##         ##     ##   ##  ##        ##          ## ##         ##
-    ##    ######     ##     #######  ##  ####  #####          ##         ##
-    ##        ##     ##     ##   ##  ##    ##  ##             ##         ##
-    ##    ######     ##     ##   ##  ########  #######     ########      ##
-    ##                                                                   ## 
-    #####################################################################*/
+    wire [3:0] B_4b_s [7:0];
+    wire [3:0] A_4b_s [7:0];
+    wire [7:0] A_8b_s [7:0];
+    wire [7:0] B_8b_s [7:0];
+    wire [7:0] AxB_8b_s [63:0];
+    wire [63:0] sft_mult_s [63:0];
+    wire [63:0] ext_mult_s [63:0];
 
 
+    wire [63:0] mult_result_s[63:0];
+
+    wire [2:0] funct3_s;
+
+    reg [7:0] pipe_stage_s [63:0];
+    reg [63:0] pipe_stage2_s [7:0];
+    reg upper_reg;
+    reg upper2_reg;
 
     /*===============================
                 CONTROL
@@ -87,190 +71,288 @@ module biriscv_multiplier
     always@* begin
         case (funct3_s)
             MUL : begin
-                ext_A_S1_s = 1'b0;
-                ext_B_S1_s = 1'b0;
+                sig_A_S1_s = 1'b0;
+                sig_B_S1_s = 1'b0;
                 upper_S1_s = 1'b0;
             end
             MULH : begin
-                ext_A_S1_s = 1'b1;
-                ext_B_S1_s = 1'b1;
+                sig_A_S1_s = 1'b1;
+                sig_B_S1_s = 1'b1;
                 upper_S1_s = 1'b1;
             end
             MULHU : begin
-                ext_A_S1_s = 1'b0;
-                ext_B_S1_s = 1'b0;
+                sig_A_S1_s = 1'b0;
+                sig_B_S1_s = 1'b0;
                 upper_S1_s = 1'b1;
             end
             MULHSU : begin
-                ext_A_S1_s = 1'b1;
-                ext_B_S1_s = 1'b0;
+                sig_A_S1_s = 1'b1;
+                sig_B_S1_s = 1'b0;
                 upper_S1_s = 1'b1;
             end
             default : begin // Division instructions, do MUL
-                ext_A_S1_s = 1'b0;
-                ext_B_S1_s = 1'b0;
+                sig_A_S1_s = 1'b0;
+                sig_B_S1_s = 1'b0;
                 upper_S1_s = 1'b0;
             end
         endcase
     end
 
     /*===============================
-              INVERT A AND B
-    =================================
-    B need be positive if multiplication is signed.
+             8(A_4b) x 8(B_4b)
+    ===============================*/
 
-     A  x  B =  AB           --> no invert nothing
-    -A  x  B = -AB           --> no invert nothing
-    -A  x -B =  AB =  A x B  --> invert both
-     A  x -B = -AB = -A x B  --> invert both 
+    assign A_4b_s[0] = opcode_ra_operand_i[3:0];
+    assign A_4b_s[1] = opcode_ra_operand_i[7:4];
+    assign A_4b_s[2] = opcode_ra_operand_i[11:8];
+    assign A_4b_s[3] = opcode_ra_operand_i[15:12];
+    assign A_4b_s[4] = opcode_ra_operand_i[19:16];
+    assign A_4b_s[5] = opcode_ra_operand_i[23:20];
+    assign A_4b_s[6] = opcode_ra_operand_i[27:24];
+    assign A_4b_s[7] = opcode_ra_operand_i[31:28];
 
-    */
+    assign B_4b_s[0] = opcode_rb_operand_i[3:0];
+    assign B_4b_s[1] = opcode_rb_operand_i[7:4];
+    assign B_4b_s[2] = opcode_rb_operand_i[11:8];
+    assign B_4b_s[3] = opcode_rb_operand_i[15:12];
+    assign B_4b_s[4] = opcode_rb_operand_i[19:16];
+    assign B_4b_s[5] = opcode_rb_operand_i[23:20];
+    assign B_4b_s[6] = opcode_rb_operand_i[27:24];
+    assign B_4b_s[7] = opcode_rb_operand_i[31:28];
 
-    // Take the MSB of B
-    assign B_msb_S1_s = opcode_rb_operand_i[31];
+    assign A_8b_s[0] = {4'b0000 ,A_4b_s[0]};
+    assign A_8b_s[1] = {4'b0000 ,A_4b_s[1]};
+    assign A_8b_s[2] = {4'b0000 ,A_4b_s[2]};
+    assign A_8b_s[3] = {4'b0000 ,A_4b_s[3]};
+    assign A_8b_s[4] = {4'b0000 ,A_4b_s[4]};
+    assign A_8b_s[5] = {4'b0000 ,A_4b_s[5]};
+    assign A_8b_s[6] = {4'b0000 ,A_4b_s[6]};
+    assign A_8b_s[7] = (sig_A_S1_s==1'b1) ? {{{4{A_4b_s[7][3]}}},A_4b_s[7]} : {4'b0000 ,A_4b_s[7]};
 
-    // This signal indicates if B and A need be inverted
-    assign B_sig_or_unsig_S1_s = ext_B_S1_s && B_msb_S1_s;
+    assign B_8b_s[0] = {4'b0000 ,B_4b_s[0]};
+    assign B_8b_s[1] = {4'b0000 ,B_4b_s[1]};
+    assign B_8b_s[2] = {4'b0000 ,B_4b_s[2]};
+    assign B_8b_s[3] = {4'b0000 ,B_4b_s[3]};
+    assign B_8b_s[4] = {4'b0000 ,B_4b_s[4]};
+    assign B_8b_s[5] = {4'b0000 ,B_4b_s[5]};
+    assign B_8b_s[6] = {4'b0000 ,B_4b_s[6]};
+    assign B_8b_s[7] = (sig_B_S1_s==1'b1) ? {{{4{B_4b_s[7][3]}}},B_4b_s[7]} : {4'b0000 ,B_4b_s[7]};
 
-    // Invert A and B or not
-    always@* begin
-        if(B_sig_or_unsig_S1_s == 1'b1) begin
-            B_inverted_S1_s = ~opcode_rb_operand_i + 32'h00000001;
-            A_inverted_S1_s = ~opcode_ra_operand_i + 32'h00000001;
-        end
-        else begin
-            B_inverted_S1_s = opcode_rb_operand_i;
-            A_inverted_S1_s = opcode_ra_operand_i;
-        end
-    end
 
-    
-    
-    genvar i;
+
+    genvar i, j;
     generate
-
-        /*===============================
-                    MULTIPLEXERS
-        ===============================*/
-
-        for (i=0 ; i<32 ; i=i+1) begin
-            assign mux_a_S1_s[i] = (B_inverted_S1_s[i]==1'b1) ?  A_inverted_S1_s : 32'h00000000;  // TEST ? VALUE_IF_TRUE : VALUE_IF_FALSE ;
+        for (i = 0; i < 8; i = i + 1) begin : loopA
+            for (j = 0; j < 8; j = j + 1) begin : loopB
+                assign AxB_8b_s[i*8 + j] = A_8b_s[i] * B_8b_s[j];
+            end
         end
+    endgenerate
 
-
-        /*===============================
-                    EXTEND A
-        ===============================*/
-
-        // if is signed extend the signal, else concatenate 0
-        for (i=0 ; i<32 ; i=i+1) begin
-            assign A_ext_S2_s[i] = (ext_A_S1_s==1'b1) ? {{32{mux_a_S1_s[i][31]}} ,mux_a_S1_s[i]} : {32'h00000000 ,mux_a_S1_s[i]};
-        end
-
-
-        /*===============================
-                    SHIFT A
-        ===============================*/
-
-        // if is signed extend the signal, else concatenate 0
-        for (i=0 ; i<32 ; i=i+1) begin
-            assign A_sft_S2_s[i] = A_ext_S2_s[i] << i;
-        end
-
-
-        /*===============================
-                STAGE 1 PIPE REGISTER
-        ===============================*/
-
-        for (i=0 ; i<32 ; i=i+1) begin
+    generate
+        for (j=0 ; j<64 ; j=j+1) begin
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
-                    Stage1_s[i] <= 64'h0000000000000000;
-                    Reg_upper_S1_s <= 1'b0;
+                    pipe_stage_s[j] <= 8'h00;
+                    upper_reg <= 1'b0;
                 end
                 else if(hold_i) begin
-                    Stage1_s[i] <= A_sft_S2_s[i];
-                    Reg_upper_S1_s <= upper_S1_s;
+                    pipe_stage_s[j] <= AxB_8b_s[j];
+                    upper_reg <= upper_S1_s;
                 end
             end
         end
-
     endgenerate
 
+    
 
-    /*#####################################################################
-    ##                                                                   ##
-    ##    ######  ########  #######  ########  #######     ########      ##
-    ##    ##         ##     ##   ##  ##        ##                ##      ##
-    ##    ######     ##     #######  ##  ####  #####       ########      ##
-    ##        ##     ##     ##   ##  ##    ##  ##          ##            ##
-    ##    ######     ##     ##   ##  ########  #######     ########      ##
-    ##                                                                   ## 
-    #####################################################################*/
+    /*===============================
+            EXTEND RESULTS
+    ===============================*/
 
-
-    genvar j;
     generate
-
-        /*===============================
-                    ADD 3 LAYERS
-        ===============================*/
-
-        for (j=0 ; j<16 ; j=j+1) begin
-            assign Add_L1_S2_s[j] = Stage1_s[j*2] + Stage1_s[j*2+1];
+        for (i = 0; i < 64; i = i + 1) begin
+            assign ext_mult_s[i] = {{56{pipe_stage_s[i][7]}}, pipe_stage_s[i]} ;
         end
+    endgenerate
 
+    /*===============================
+            SHIFT RESULTS
+    ===============================*/
+
+
+
+    assign sft_mult_s[0] = ext_mult_s[0];     // A0 + B0
+    assign sft_mult_s[1] = ext_mult_s[1]<<4;  // A0 + B1<<4
+    assign sft_mult_s[2] = ext_mult_s[2]<<8;  // A0 + B2<<8
+    assign sft_mult_s[3] = ext_mult_s[3]<<12; // A0 + B3<<12
+    assign sft_mult_s[4] = ext_mult_s[4]<<16; // A0 + B4<<16
+    assign sft_mult_s[5] = ext_mult_s[5]<<20; // A0 + B5<<20
+    assign sft_mult_s[6] = ext_mult_s[6]<<24; // A0 + B6<<24
+    assign sft_mult_s[7] = ext_mult_s[7]<<28; // A0 + B7<<28
+
+    assign sft_mult_s[8]  = ext_mult_s[8]<<4;    // A0<<4 + B0
+    assign sft_mult_s[9]  = ext_mult_s[9]<<8;    // A0<<4 + B1<<4
+    assign sft_mult_s[10] = ext_mult_s[10]<<12;  // A0<<4 + B2<<8
+    assign sft_mult_s[11] = ext_mult_s[11]<<16;  // A0<<4 + B3<<12
+    assign sft_mult_s[12] = ext_mult_s[12]<<20;  // A0<<4 + B4<<16
+    assign sft_mult_s[13] = ext_mult_s[13]<<24;  // A0<<4 + B5<<20
+    assign sft_mult_s[14] = ext_mult_s[14]<<28;  // A0<<4 + B6<<24
+    assign sft_mult_s[15] = ext_mult_s[15]<<32;  // A0<<4 + B7<<28
+
+    assign sft_mult_s[16] = ext_mult_s[16]<<8;    // A0<<8 + B0
+    assign sft_mult_s[17] = ext_mult_s[17]<<12;   // A0<<8 + B1<<4
+    assign sft_mult_s[18] = ext_mult_s[18]<<16;   // A0<<8 + B2<<8
+    assign sft_mult_s[19] = ext_mult_s[19]<<20;   // A0<<8 + B3<<12
+    assign sft_mult_s[20] = ext_mult_s[20]<<24;   // A0<<8 + B4<<16
+    assign sft_mult_s[21] = ext_mult_s[21]<<28;   // A0<<8 + B5<<20
+    assign sft_mult_s[22] = ext_mult_s[22]<<32;   // A0<<8 + B6<<24
+    assign sft_mult_s[23] = ext_mult_s[23]<<36;   // A0<<8 + B7<<28
+
+    assign sft_mult_s[24] = ext_mult_s[24]<<12;    // A0<<12 + B0
+    assign sft_mult_s[25] = ext_mult_s[25]<<16;   // A0<<12 + B1<<4
+    assign sft_mult_s[26] = ext_mult_s[26]<<20;   // A0<<12 + B2<<8
+    assign sft_mult_s[27] = ext_mult_s[27]<<24;   // A0<<12 + B3<<12
+    assign sft_mult_s[28] = ext_mult_s[28]<<28;   // A0<<12 + B4<<16
+    assign sft_mult_s[29] = ext_mult_s[29]<<32;   // A0<<12 + B5<<20
+    assign sft_mult_s[30] = ext_mult_s[30]<<36;   // A0<<12 + B6<<24
+    assign sft_mult_s[31] = ext_mult_s[31]<<40;   // A0<<12 + B7<<28
+
+    assign sft_mult_s[32] = ext_mult_s[32]<<16;   // A0<<16 + B0
+    assign sft_mult_s[33] = ext_mult_s[33]<<20;   // A0<<16 + B1<<4
+    assign sft_mult_s[34] = ext_mult_s[34]<<24;   // A0<<16 + B2<<8
+    assign sft_mult_s[35] = ext_mult_s[35]<<28;   // A0<<16 + B3<<12
+    assign sft_mult_s[36] = ext_mult_s[36]<<32;   // A0<<16 + B4<<16
+    assign sft_mult_s[37] = ext_mult_s[37]<<36;   // A0<<16 + B5<<20
+    assign sft_mult_s[38] = ext_mult_s[38]<<40;   // A0<<16 + B6<<24
+    assign sft_mult_s[39] = ext_mult_s[39]<<44;   // A0<<16 + B7<<28
+
+    assign sft_mult_s[40] = ext_mult_s[40]<<20;   // A0<<20 + B0
+    assign sft_mult_s[41] = ext_mult_s[41]<<24;   // A0<<20 + B1<<4
+    assign sft_mult_s[42] = ext_mult_s[42]<<28;   // A0<<20 + B2<<8
+    assign sft_mult_s[43] = ext_mult_s[43]<<32;   // A0<<20 + B3<<12
+    assign sft_mult_s[44] = ext_mult_s[44]<<36;   // A0<<20 + B4<<16
+    assign sft_mult_s[45] = ext_mult_s[45]<<40;   // A0<<20 + B5<<20
+    assign sft_mult_s[46] = ext_mult_s[46]<<44;   // A0<<20 + B6<<24
+    assign sft_mult_s[47] = ext_mult_s[47]<<48;   // A0<<20 + B7<<28
+
+    assign sft_mult_s[48] = ext_mult_s[48]<<24;   // A0<<24 + B0
+    assign sft_mult_s[49] = ext_mult_s[49]<<28;   // A0<<24 + B1<<4
+    assign sft_mult_s[50] = ext_mult_s[50]<<32;   // A0<<24 + B2<<8
+    assign sft_mult_s[51] = ext_mult_s[51]<<36;   // A0<<24 + B3<<12
+    assign sft_mult_s[52] = ext_mult_s[52]<<40;   // A0<<24 + B4<<16
+    assign sft_mult_s[53] = ext_mult_s[53]<<44;   // A0<<24 + B5<<20
+    assign sft_mult_s[54] = ext_mult_s[54]<<48;   // A0<<24 + B6<<24
+    assign sft_mult_s[55] = ext_mult_s[55]<<52;   // A0<<24 + B7<<28
+
+    assign sft_mult_s[56] = ext_mult_s[56]<<28;   // A0<<28 + B0
+    assign sft_mult_s[57] = ext_mult_s[57]<<32;   // A0<<28 + B1<<4
+    assign sft_mult_s[58] = ext_mult_s[58]<<36;   // A0<<28 + B2<<8
+    assign sft_mult_s[59] = ext_mult_s[59]<<40;   // A0<<28 + B3<<12
+    assign sft_mult_s[60] = ext_mult_s[60]<<44;   // A0<<28 + B4<<16
+    assign sft_mult_s[61] = ext_mult_s[61]<<48;   // A0<<28 + B5<<20
+    assign sft_mult_s[62] = ext_mult_s[62]<<52;   // A0<<28 + B6<<24
+    assign sft_mult_s[63] = ext_mult_s[63]<<56;   // A0<<28 + B7<<28
+
+
+
+    /*===============================
+        EXTEND A AND B TO 33 BITS
+    ===============================*/
+
+    assign mult_result_s[0] = sft_mult_s[0] + sft_mult_s[1];
+    assign mult_result_s[1] = sft_mult_s[2] + sft_mult_s[3];
+    assign mult_result_s[2] = sft_mult_s[4] + sft_mult_s[5];
+    assign mult_result_s[3] = sft_mult_s[6] + sft_mult_s[7];
+    assign mult_result_s[4] = sft_mult_s[8] + sft_mult_s[9];
+    assign mult_result_s[5] = sft_mult_s[10] + sft_mult_s[11];
+    assign mult_result_s[6] = sft_mult_s[12] + sft_mult_s[13];
+    assign mult_result_s[7] = sft_mult_s[14] + sft_mult_s[15];
+    assign mult_result_s[8] = sft_mult_s[16] + sft_mult_s[17];
+    assign mult_result_s[9] = sft_mult_s[18] + sft_mult_s[19];
+    assign mult_result_s[10] = sft_mult_s[20] + sft_mult_s[21];
+    assign mult_result_s[11] = sft_mult_s[22] + sft_mult_s[23];
+    assign mult_result_s[12] = sft_mult_s[24] + sft_mult_s[25];
+    assign mult_result_s[13] = sft_mult_s[26] + sft_mult_s[27];
+    assign mult_result_s[14] = sft_mult_s[28] + sft_mult_s[29];
+    assign mult_result_s[15] = sft_mult_s[30] + sft_mult_s[31];
+    assign mult_result_s[16] = sft_mult_s[32] + sft_mult_s[33];
+    assign mult_result_s[17] = sft_mult_s[34] + sft_mult_s[35];
+    assign mult_result_s[18] = sft_mult_s[36] + sft_mult_s[37];
+    assign mult_result_s[19] = sft_mult_s[38] + sft_mult_s[39];
+    assign mult_result_s[20] = sft_mult_s[40] + sft_mult_s[41];
+    assign mult_result_s[21] = sft_mult_s[42] + sft_mult_s[43];
+    assign mult_result_s[22] = sft_mult_s[44] + sft_mult_s[45];
+    assign mult_result_s[23] = sft_mult_s[46] + sft_mult_s[47];
+    assign mult_result_s[24] = sft_mult_s[48] + sft_mult_s[49];
+    assign mult_result_s[25] = sft_mult_s[50] + sft_mult_s[51];
+    assign mult_result_s[26] = sft_mult_s[52] + sft_mult_s[53];
+    assign mult_result_s[27] = sft_mult_s[54] + sft_mult_s[55];
+    assign mult_result_s[28] = sft_mult_s[56] + sft_mult_s[57];
+    assign mult_result_s[29] = sft_mult_s[58] + sft_mult_s[59];
+    assign mult_result_s[30] = sft_mult_s[60] + sft_mult_s[61];
+    assign mult_result_s[31] = sft_mult_s[62] + sft_mult_s[63];
+
+    assign mult_result_s[32] = mult_result_s[0] + mult_result_s[1];
+    assign mult_result_s[33] = mult_result_s[2] + mult_result_s[3];
+    assign mult_result_s[34] = mult_result_s[4] + mult_result_s[5];
+    assign mult_result_s[35] = mult_result_s[6] + mult_result_s[7];
+    assign mult_result_s[36] = mult_result_s[8] + mult_result_s[9];
+    assign mult_result_s[37] = mult_result_s[10] + mult_result_s[11];
+    assign mult_result_s[38] = mult_result_s[12] + mult_result_s[13];
+    assign mult_result_s[39] = mult_result_s[14] + mult_result_s[15];
+    assign mult_result_s[40] = mult_result_s[16] + mult_result_s[17];
+    assign mult_result_s[41] = mult_result_s[18] + mult_result_s[19];
+    assign mult_result_s[42] = mult_result_s[20] + mult_result_s[21];
+    assign mult_result_s[43] = mult_result_s[22] + mult_result_s[23];
+    assign mult_result_s[44] = mult_result_s[24] + mult_result_s[25];
+    assign mult_result_s[45] = mult_result_s[26] + mult_result_s[27];
+    assign mult_result_s[46] = mult_result_s[28] + mult_result_s[29];
+    assign mult_result_s[47] = mult_result_s[30] + mult_result_s[31];
+
+    assign mult_result_s[48] = mult_result_s[32] + mult_result_s[33];
+    assign mult_result_s[49] = mult_result_s[34] + mult_result_s[35];
+    assign mult_result_s[50] = mult_result_s[36] + mult_result_s[37];
+    assign mult_result_s[51] = mult_result_s[38] + mult_result_s[39];
+    assign mult_result_s[52] = mult_result_s[40] + mult_result_s[41];
+    assign mult_result_s[53] = mult_result_s[42] + mult_result_s[43];
+    assign mult_result_s[54] = mult_result_s[44] + mult_result_s[45];
+    assign mult_result_s[55] = mult_result_s[46] + mult_result_s[47];
+
+
+
+
+    generate
         for (j=0 ; j<8 ; j=j+1) begin
-            assign Add_L2_S2_s[j] = Add_L1_S2_s[j*2] + Add_L1_S2_s[j*2+1];
-        end
-
-        for (j=0 ; j<4 ; j=j+1) begin
-            assign Add_L3_S3_s[j] = Add_L2_S2_s[j*2] + Add_L2_S2_s[j*2+1];       
-        end
-
-
-        /*===============================
-                STAGE 2 PIPE REGISTER
-        ===============================*/
-
-        for (j=0 ; j<4 ; j=j+1) begin
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
-                    Stage2_s[j] <= 64'h0000000000000000;
-                    Reg_upper_S2_s <= 1'b0;
+                    pipe_stage2_s[j] <= 64'h0000000000000000;
+                    upper2_reg <= 1'b0;
                 end
-                else if(~hold_i) begin
-                    Stage2_s[j] <= Add_L3_S3_s[j];
-                    Reg_upper_S2_s <= Reg_upper_S1_s;
+                else if(hold_i) begin
+                    pipe_stage2_s[j] <= mult_result_s[48+j];
+                    upper2_reg <= upper_reg;
                 end
             end
         end
     endgenerate
 
-    /*#####################################################################
-    ##                                                                   ##
-    ##    ######  ########  #######  ########  #######     ########      ##
-    ##    ##         ##     ##   ##  ##        ##                ##      ##
-    ##    ######     ##     #######  ##  ####  #####       ########      ##
-    ##        ##     ##     ##   ##  ##    ##  ##                ##      ##
-    ##    ######     ##     ##   ##  ########  #######     ########      ##
-    ##                                                                   ## 
-    #####################################################################*/
 
-    /*===============================
-                ADD 2 LAYERS
-    ===============================*/
 
-    assign Add_L4_S3_s[0] = Stage2_s[0] + Stage2_s[1];
-    assign Add_L4_S3_s[1] = Stage2_s[2] + Stage2_s[3];
 
-    assign Add_L5_S3_s = Add_L4_S3_s[0] + Add_L4_S3_s[1];
 
-    /*===============================
-                LOW/UPPER MUX
-    ===============================*/
+    assign mult_result_s[56] = pipe_stage2_s[0] + pipe_stage2_s[1];
+    assign mult_result_s[57] = pipe_stage2_s[2] + pipe_stage2_s[3];
+    assign mult_result_s[58] = pipe_stage2_s[4] + pipe_stage2_s[5];
+    assign mult_result_s[59] = pipe_stage2_s[6] + pipe_stage2_s[7];
 
-    assign writeback_value_o = (Reg_upper_S2_s==1'b1) ? Add_L5_S3_s[63:32] : Add_L5_S3_s[31:0];
+    assign mult_result_s[60] = mult_result_s[56] + mult_result_s[57];
+    assign mult_result_s[61] = mult_result_s[58] + mult_result_s[59];
+    
+    assign mult_result_s[62] = mult_result_s[60] + mult_result_s[61];
+
+
+    assign writeback_value_o = (upper2_reg==1'b1) ? mult_result_s[62][63:32] : mult_result_s[62][31:0];
     
 
 endmodule

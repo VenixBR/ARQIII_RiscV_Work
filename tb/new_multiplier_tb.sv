@@ -1,6 +1,7 @@
 module new_multiplier_tb;
 
     localparam CLK_PERIOD = 10;
+    localparam STAGES = 3;
 
     logic clk, rst, opcode_valid, hold;
     logic [31:0] opcode, A_op, B_op, answer;
@@ -23,6 +24,7 @@ module new_multiplier_tb;
     initial begin
         clk = 0;
         rst = 0;
+        hold = 1;
         A_op = 32'h80000001; // 2147483649 ou -2147483647
         B_op = 32'h80010002; // 65538 ou 65538
 
@@ -35,9 +37,9 @@ module new_multiplier_tb;
 
         #(CLK_PERIOD/2)
         rst = 1;
-        #(CLK_PERIOD/2)
+        #(3*CLK_PERIOD/2)
         rst = 0;
-        #CLK_PERIOD
+        #((STAGES+1)*CLK_PERIOD)
 
         $display("\n+-------------+------------+------------+");
         $display(  "| Instruction |  Expected  |   Answer   |");
@@ -50,7 +52,7 @@ module new_multiplier_tb;
         A_ext = {{32{A_op[31]}}, A_op};
         B_ext = {{32{B_op[31]}}, B_op};
         AxB = A_ext * B_ext;
-        # CLK_PERIOD
+        #(STAGES*CLK_PERIOD)
 
         $display(  "| MULH        | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
 
@@ -59,7 +61,7 @@ module new_multiplier_tb;
         A_ext = {{32{A_op[31]}}, A_op};
         B_ext = {32'h00000000, B_op};
         AxB = A_ext * B_ext;
-        # CLK_PERIOD
+        #(STAGES*CLK_PERIOD)
 
         $display(  "| MULHSU      | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
 
@@ -68,7 +70,7 @@ module new_multiplier_tb;
         A_ext = {32'h00000000, A_op};
         B_ext = {32'h00000000, B_op};
         AxB = A_ext * B_ext;
-        # CLK_PERIOD
+        #(STAGES*CLK_PERIOD)
 
         $display(  "| MULHU       | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
         $display(  "+-------------+------------+------------+\n");

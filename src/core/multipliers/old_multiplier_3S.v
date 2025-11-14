@@ -23,6 +23,24 @@
 // limitations under the License.
 //-----------------------------------------------------------------
 
+
+// mul
+`define INST_MUL 32'h2000033
+`define INST_MUL_MASK 32'hfe00707f
+
+// mulh
+`define INST_MULH 32'h2001033
+`define INST_MULH_MASK 32'hfe00707f
+
+// mulhsu
+`define INST_MULHSU 32'h2002033
+`define INST_MULHSU_MASK 32'hfe00707f
+
+// mulhu
+`define INST_MULHU 32'h2003033
+`define INST_MULHU_MASK 32'hfe00707f
+
+
 module biriscv_multiplier
 (
     // Inputs
@@ -48,7 +66,7 @@ module biriscv_multiplier
 //-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
-`include "biriscv_defs.v"
+//`include "biriscv_defs.v"
 
 localparam MULT_STAGES = 2; // 2 or 3
 

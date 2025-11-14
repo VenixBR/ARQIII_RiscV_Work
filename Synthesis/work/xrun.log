@@ -1,34 +1,53 @@
 xrun: 23.03-s005: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun	23.03-s005: Started on Oct 29, 2025 at 17:04:17 -03
+TOOL:	xrun	23.03-s005: Started on Nov 04, 2025 at 15:45:04 -03
 xrun
 	-v2001
 	/home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
+	/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
 	-access +rwc
-file: /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
-	module worklib.biriscv_multiplier:v
+	+define+CLA4x4
+Recompiling... reason: file '/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv' is newer than expected.
+	expected: Tue Nov  4 15:44:25 2025
+	actual:   Tue Nov  4 15:45:02 2025
+file: /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
+	module worklib.new_multiplier_tb:sv
 		errors: 0, warnings: 0
 		Caching library 'worklib' ....... Done
 	Elaborating the design hierarchy:
 	Top level design units:
-		biriscv_multiplier
+		new_multiplier_tb
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.biriscv_multiplier:v <0x050304ed>
-			streams:  24, words: 13040
+		worklib.new_multiplier_tb:sv <0x2769ddc5>
+			streams:  11, words: 11000
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
-		              Instances  Unique
-		Modules:              1       1
-		Registers:            9       9
-		Scalar wires:         6       -
-		Vectored wires:     132       -
-		Always blocks:       38       4
-		Cont. assignments:  131      12
-	Writing initial simulation snapshot: worklib.biriscv_multiplier:v
-Loading snapshot worklib.biriscv_multiplier:v .................... Done
+		                Instances  Unique
+		Modules:                2       2
+		Registers:             18      18
+		Scalar wires:           4       -
+		Expanded wires:      4096      64
+		Vectored wires:       230       -
+		Always blocks:         74       4
+		Initial blocks:         1       1
+		Cont. assignments:    275     163
+		Pseudo assignments:     8       -
+	Writing initial simulation snapshot: worklib.new_multiplier_tb:sv
+Loading snapshot worklib.new_multiplier_tb:sv .................... Done
 xcelium> source /home/tools/cadence/installs/XCELIUM2303/tools/xcelium/files/xmsimrc
 xcelium> run
-xmsim: *W,RNQUIE: Simulation is complete.
+
++-------------+------------+------------+
+| Instruction |  Expected  |   Answer   |
++-------------+------------+------------+
+| MUL         | 0x80010002 | 0x80010002 |
+| MULH        | 0x3fff7ffe | 0x3fff7ffe |
+| MULHSU      | 0xbfff7fff | 0xbfff7fff |
+| MULHU       | 0x40008001 | 0x40008001 |
++-------------+------------+------------+
+
+Simulation complete via $finish(1) at time 180 NS + 0
+/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv:77         $finish;
 xcelium> exit
-TOOL:	xrun	23.03-s005: Exiting on Oct 29, 2025 at 17:04:18 -03  (total: 00:00:01)
+TOOL:	xrun	23.03-s005: Exiting on Nov 04, 2025 at 15:45:04 -03  (total: 00:00:00)
