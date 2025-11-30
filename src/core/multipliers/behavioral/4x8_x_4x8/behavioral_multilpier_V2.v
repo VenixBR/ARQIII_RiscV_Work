@@ -126,12 +126,12 @@ module biriscv_multiplier
     assign A_16b_s[0] = {8'b00000000 ,A_8b_s[0]};
     assign A_16b_s[1] = {8'b00000000 ,A_8b_s[1]};
     assign A_16b_s[2] = {8'b00000000 ,A_8b_s[2]};
-    assign A_16b_s[3] = (sig_A_S1_s==1'b1) ? {{{4{A_8b_s[3][7]}}},A_8b_s[3]} : {4'b0000 ,A_8b_s[3]};
+    assign A_16b_s[3] = (sig_A_S1_s==1'b1) ? {{{8{A_8b_s[3][7]}}},A_8b_s[3]} : {4'b0000 ,A_8b_s[3]};
 
     assign B_16b_s[0] = {8'b00000000 ,B_8b_s[0]};
     assign B_16b_s[1] = {8'b00000000 ,B_8b_s[1]};
     assign B_16b_s[2] = {8'b00000000 ,B_8b_s[2]};
-    assign B_16b_s[3] = (sig_B_S1_s==1'b1) ? {{{4{B_8b_s[3][7]}}},B_8b_s[3]} : {4'b0000 ,B_8b_s[3]};
+    assign B_16b_s[3] = (sig_B_S1_s==1'b1) ? {{{8{B_8b_s[3][7]}}},B_8b_s[3]} : {4'b0000 ,B_8b_s[3]};
 
 
 

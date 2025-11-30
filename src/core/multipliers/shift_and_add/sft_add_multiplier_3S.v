@@ -188,7 +188,7 @@ module biriscv_multiplier
                     Stage1_s[i] <= 64'h0000000000000000;
                     Reg_upper_S1_s <= 1'b0;
                 end
-                else if(hold_i) begin
+                else if(~hold_i) begin
                     Stage1_s[i] <= A_sft_S2_s[i];
                     Reg_upper_S1_s <= upper_S1_s;
                 end

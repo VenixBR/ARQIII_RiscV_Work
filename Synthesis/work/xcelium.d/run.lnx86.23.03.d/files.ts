@@ -26,5 +26,5 @@
 1760728501 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tcm_mem.v
 1760728501 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/biriscv_trace_sim_gls.sv
 1761367570 /home/schultz/Documents/ARQIII_RiscV_Work/tb/tb_core_icarus/tb_top.v
-1762281840 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
-1762281902 /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
+1764537857 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
+1764537150 /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv

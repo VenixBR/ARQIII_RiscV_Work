@@ -55,12 +55,14 @@ module biriscv_multiplier
     wire [95:0] sft_part_mult_6_s;
     wire [99:0] sft_part_mult_7_s;
 
-    wire [127:0] mult_result_s;
+    wire [127:0] mult_result_s [6:0];
 
     wire [2:0] funct3_s;
 
     reg [71:0] pipe_stage_s [7:0];
+    reg [128:0] pipe_stage2_s [3:0];
     reg upper_reg;
+    reg upper2_reg;
     
 
     /*===============================
@@ -150,7 +152,7 @@ module biriscv_multiplier
             pipe_stage_s[7] <= 72'h000000000000000000;
             upper_reg <= 1'b0;
         end
-        else begin
+        else if(~hold_i) begin
             pipe_stage_s[0] <= partial_mult_s[0];
             pipe_stage_s[1] <= partial_mult_s[1];
             pipe_stage_s[2] <= partial_mult_s[2];
@@ -171,10 +173,41 @@ module biriscv_multiplier
     assign sft_part_mult_6_s = pipe_stage_s[6]<<24;
     assign sft_part_mult_7_s = pipe_stage_s[7]<<28;
 
-    assign mult_result_s = pipe_stage_s[0] + sft_part_mult_1_s + sft_part_mult_2_s + sft_part_mult_3_s + sft_part_mult_4_s +
-                            sft_part_mult_5_s + sft_part_mult_6_s + sft_part_mult_7_s;
 
-    assign writeback_value_o = (upper_reg==1'b1) ? mult_result_s[63:32] : mult_result_s[31:0];
+    assign mult_result_s[0] = pipe_stage_s[0] + sft_part_mult_1_s;
+    assign mult_result_s[1] = sft_part_mult_2_s + sft_part_mult_3_s;
+    assign mult_result_s[2] = sft_part_mult_4_s + sft_part_mult_5_s;
+    assign mult_result_s[3] = sft_part_mult_6_s + sft_part_mult_7_s;
+
+    
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i)begin
+            pipe_stage2_s[0] <= 128'h00000000000000000000000000000000;
+            pipe_stage2_s[1] <= 128'h00000000000000000000000000000000;
+            pipe_stage2_s[2] <= 128'h00000000000000000000000000000000;
+            pipe_stage2_s[3] <= 128'h00000000000000000000000000000000;
+            upper2_reg <= 1'b0;
+        end
+        else if(~hold_i) begin
+            pipe_stage2_s[0] <= mult_result_s[0];
+            pipe_stage2_s[1] <= mult_result_s[1];
+            pipe_stage2_s[2] <= mult_result_s[2];
+            pipe_stage2_s[3] <= mult_result_s[3];
+            upper2_reg <= upper_reg;
+        end
+    end
+
+
+
+    assign mult_result_s[4] = pipe_stage2_s[0] + pipe_stage2_s[1];
+    assign mult_result_s[5] = pipe_stage2_s[2] + pipe_stage2_s[3];
+
+    assign mult_result_s[6] = mult_result_s[4] + mult_result_s[5];
+
+    //assign mult_result_s = pipe_stage_s[0] + sft_part_mult_1_s + sft_part_mult_2_s + sft_part_mult_3_s + sft_part_mult_4_s +
+    //                        sft_part_mult_5_s + sft_part_mult_6_s + sft_part_mult_7_s;
+
+    assign writeback_value_o = (upper2_reg==1'b1) ? mult_result_s[6][63:32] : mult_result_s[6][31:0];
     
 
 endmodule

@@ -41,9 +41,6 @@ module biriscv_multiplier
     reg sig_B_S1_s;
     reg upper_S1_s;
 
-    wire [32:0] A_ext_33b_s;
-    wire [71:0] B_ext_72b_s [7:0];
-    wire [71:0] A_ext_72b_s;
 
     wire [7:0] B_8b_s [3:0];
     wire [7:0] A_8b_s [3:0];
@@ -56,17 +53,7 @@ module biriscv_multiplier
     wire [63:0] ext_mult_s [15:0];
 
 
-
-    wire [71:0] partial_mult_s [7:0];
-    wire [75:0] sft_part_mult_1_s;
-    wire [79:0] sft_part_mult_2_s;
-    wire [83:0] sft_part_mult_3_s;
-    wire [87:0] sft_part_mult_4_s;
-    wire [91:0] sft_part_mult_5_s;
-    wire [95:0] sft_part_mult_6_s;
-    wire [99:0] sft_part_mult_7_s;
-
-    wire [63:0] mult_result_s;[14:0]
+    wire [63:0] mult_result_s [14:0];
 
     wire [2:0] funct3_s;
 
@@ -131,12 +118,12 @@ module biriscv_multiplier
     assign A_16b_s[0] = {8'b00000000 ,A_8b_s[0]};
     assign A_16b_s[1] = {8'b00000000 ,A_8b_s[1]};
     assign A_16b_s[2] = {8'b00000000 ,A_8b_s[2]};
-    assign A_16b_s[3] = (sig_A_S1_s==1'b1) ? {{{4{A_8b_s[3][7]}}},A_8b_s[3]} : {4'b0000 ,A_8b_s[3]};
+    assign A_16b_s[3] = (sig_A_S1_s==1'b1) ? {{{8{A_8b_s[3][7]}}},A_8b_s[3]} : {4'b0000 ,A_8b_s[3]};
 
     assign B_16b_s[0] = {8'b00000000 ,B_8b_s[0]};
     assign B_16b_s[1] = {8'b00000000 ,B_8b_s[1]};
     assign B_16b_s[2] = {8'b00000000 ,B_8b_s[2]};
-    assign B_16b_s[3] = (sig_B_S1_s==1'b1) ? {{{4{B_8b_s[3][7]}}},B_8b_s[3]} : {4'b0000 ,B_8b_s[3]};
+    assign B_16b_s[3] = (sig_B_S1_s==1'b1) ? {{{8{B_8b_s[3][7]}}},B_8b_s[3]} : {4'b0000 ,B_8b_s[3]};
 
 
 
@@ -158,8 +145,8 @@ module biriscv_multiplier
                     pipe_stage_s[j] <= 16'h0000;
                     upper_reg <= 1'b0;
                 end
-                else if(hold_i) begin
-                    pipe_stage_s[j] <= AxB_16b_s[i];
+                else if(~hold_i) begin
+                    pipe_stage_s[j] <= AxB_16b_s[j];
                     upper_reg <= upper_S1_s;
                 end
             end
@@ -218,10 +205,10 @@ module biriscv_multiplier
     assign mult_result_s[6] = sft_mult_s[12] + sft_mult_s[13];
     assign mult_result_s[7] = sft_mult_s[14] + sft_mult_s[15];
     
-    assign mult_result_s[8] = mult_result_s[0] + sft_mult_s[1];
-    assign mult_result_s[9] = mult_result_s[2] + sft_mult_s[3];
-    assign mult_result_s[10] = mult_result_s[4] + sft_mult_s[5];
-    assign mult_result_s[11] = mult_result_s[6] + sft_mult_s[7];
+    assign mult_result_s[8] = mult_result_s[0] + mult_result_s[1];
+    assign mult_result_s[9] = mult_result_s[2] + mult_result_s[3];
+    assign mult_result_s[10] = mult_result_s[4] + mult_result_s[5];
+    assign mult_result_s[11] = mult_result_s[6] + mult_result_s[7];
 
 
     generate
@@ -231,7 +218,7 @@ module biriscv_multiplier
                     pipe_stage2_s[j] <= 64'h0000000000000000;
                     upper2_reg <= 1'b0;
                 end
-                else if(hold_i) begin
+                else if(~hold_i) begin
                     pipe_stage2_s[j] <= mult_result_s[8+j];
                     upper2_reg <= upper_reg;
                 end
