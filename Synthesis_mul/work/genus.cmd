@@ -1,12 +1,7 @@
-# Cadence Genus(TM) Synthesis Solution, Version 21.18-s082_1, built Jul 18 2023 13:08:41
+# Cadence Genus(TM) Synthesis Solution, Version 21.19-s055_1, built May 29 2024 16:33:07
 
-# Date: Sat Oct 25 14:15:44 2025
-# Host: gmicro02 (x86_64 w/Linux 4.18.0-553.37.1.el8_10.x86_64) (16cores*32cpus*2physical cpus*Intel(R) Xeon(R) Silver 4314 CPU @ 2.40GHz 16384KB)
-# OS:   Red Hat Enterprise Linux release 8.10 (Ootpa)
+# Date: Thu Oct 30 09:56:12 2025
+# Host: ecomp (x86_64 w/Linux 4.18.0-553.74.1.el8_10.x86_64) (4cores*4cpus*1physical cpu*Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz 6144KB)
+# OS:   Rocky Linux release 8.10 (Green Obsidian)
 
-source /home/schultz/Documents/ARQIII_RiscV_Work/Synthesis_mul/scripts/biriscv_multiplier.tcl
-report_timing
-report_area
-report_power
-report_power -unit uw
-exit
+source /home/ufsm00051/claudenir.alves/cra_arq/Arquivo/biriscv_multiplier/Synthesis_mul/scripts/biriscv_multiplier.tcl

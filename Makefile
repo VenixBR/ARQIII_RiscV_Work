@@ -1,20 +1,29 @@
 ROOT       = $(CURDIR)
 RTL_DIR    = ${ROOT}/src/core
 TESTS_DIR  = ${ROOT}/tb
-GUI        ?= 0
+GUI        ?= 1
 TB         ?= 1
 MUL        ?= 0
+DIV        ?= 1
 FLAGS += -access +rwc
 ifeq ($(GUI),1)
 	FLAGS += -gui
 endif
 
 Multiplier:
-	cd ${ROOT}/Synthesis/work && \
+	cd ${ROOT}/Synthesis_mul/work && \
 	if [ "$(TB)" = "0" ]; then \
 		xrun -v2001 ${RTL_DIR}/radix_multiplier.v $(FLAGS); \
 	else \
 		xrun -v2001 ${RTL_DIR}/radix_multiplier.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
+	fi
+
+Divisor:
+	cd ${ROOT}/Synthesis_div/work && \
+	if [ "$(TB)" = "0" ]; then \
+		xrun -v2001 ${RTL_DIR}/biriscv_divider.v $(FLAGS); \
+	else \
+		xrun -v2001 ${RTL_DIR}/biriscv_divider.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
 	fi
 
 ControlPath:
@@ -39,12 +48,6 @@ Top:
 
 
 
-
-
-
-
-
-
 ###################################################
 ## BUZATTI MAKEFILE TO SYNTHESIS
 ###################################################
@@ -52,10 +55,13 @@ Top:
 ###################################################
 
 # Design top name (Top module name and filename must be the same)
-ifeq ($(MUL),0)
-DESIGNS := riscv_core
-else
+ifeq ($(MUL),1) 
 DESIGNS := biriscv_multiplier
+endif
+ifeq ($(DIV),1) 
+DESIGNS := biriscv_divider
+else
+DESIGNS := riscv_core
 endif
 export DESIGNS
 
@@ -83,10 +89,13 @@ PROJECT_DIR := $(CURDIR)
 export PROJECT_DIR
 
 ## Logic synthesis directory
-ifeq ($(MUL),0)
-SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis
-else
+ifeq ($(MUL),1)
 SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis_mul
+endif
+ifeq ($(DIV),1)
+SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis_div
+else
+SYNTHESIS_DIR := $(PROJECT_DIR)/Synthesis
 endif
 export SYNTHESIS_DIR
 
@@ -99,7 +108,7 @@ HDL_NAME := $(DESIGNS)
 export HDL_NAME
 
 ## If it is not specified in Command Line, Synthesis frequency is set to 500 MHz
-FREQ_MHZ ?= 500
+FREQ_MHZ ?= 340
 export FREQ_MHZ
 
 ## If it is not specified in Command Line, Corner is set to WORST (there ain't no typcal)
@@ -157,9 +166,9 @@ compile-sdf:
 
 ## Simulation with no GUI
 sim:
-	cd $(PROJECT_DIR)/frontend/work && \
+	cd $(SYNTHESIS_DIR)/work && \
 	xrun -clean && \
-	xrun -f filelist.txt -mess -64bit $(EXTRA_ARGS) -top ${DESIGNS}_tb -timescale '1ns/1ps' -access +rwc
+	xrun -f filelist.txt -mess -64bit $(EXTRA_ARGS) -top new_multiplier_tb -timescale '1ns/1ps' -access +rwc
 
 ## Simulation with GUI
 sim-gui:

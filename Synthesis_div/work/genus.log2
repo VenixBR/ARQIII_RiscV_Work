@@ -1,0 +1,53 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2023 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[13:50:57.296874] Configured Lic search path (21.01-s002): 27001@192.168.1.10:27001@200.132.35.25
+
+Version: 21.18-s082_1, built Tue Jul 18 09:08:41 PDT 2023
+Options: 
+Date:    Tue Oct 21 13:50:57 2025
+Host:    gmicro02 (x86_64 w/Linux 4.18.0-553.37.1.el8_10.x86_64) (16cores*32cpus*2physical cpus*Intel(R) Xeon(R) Silver 4314 CPU @ 2.40GHz 16384KB) (124344320KB)
+PID:     664522
+OS:      Red Hat Enterprise Linux release 8.10 (Ootpa)
+
+
+[13:50:57.494417] Periodic Lic check successful
+[13:50:57.494424] Feature usage summary:
+[13:50:57.494424] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (9 seconds elapsed).
+
+WARNING: This version of the tool is 826 days old.
+@genus:root: 1> read_db fv/riscv_core/fv_map.v.gz
+Reading database file 'fv/riscv_core/fv_map.v.gz'.
+Error   : Cannot read the database. [DATABASE-117] [read_db]
+        : failed.
+        : Check if the version used to generate the database is the same as the version used to load the database. This error usually occurs when the database is created with an older tool version. To regenerate the database, use the db-version of the tool to write: the netlist using the 'write_hdl' command, the setup script using the 'split_db' command (modify the setup script to fix any script failure.) , all the constraint information using the 'write_sdc', 'write_power_intent', 'write_tcf', 'write_script' commands, etc. Next, read these files into the current tool version and regenerate the database. The setup script belonging to this database (created using split_db) must be sourced before loading the database.
+Error   : Error loading database. [DATABASE-130] [read_db]
+        : failed.
+        : An error message has been issued. Follow up on the error message(s) issued above.
+1
+@genus:root: 2> read_db fv/riscv_core/
+Reading database file 'fv/riscv_core'.
+Warning : Could not open file. [TUI-504]
+        : Error reading from file 'fv/riscv_core': Is a directory.
+        : Check permissions of the file and directory.
+1
+@genus:root: 3> exit
+
+Lic Summary:
+[13:52:05.168120] Cdslmd servers: gmicro0
+[13:52:05.168129] Feature usage summary:
+[13:52:05.168130] Genus_Synthesis
+
+Normal exit.

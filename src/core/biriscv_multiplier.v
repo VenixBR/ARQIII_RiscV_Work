@@ -50,7 +50,7 @@ module biriscv_multiplier
 //-----------------------------------------------------------------
 `include "biriscv_defs.v"
 
-localparam MULT_STAGES = 2; // 2 or 3
+localparam MULT_STAGES = 3; // 2 or 3
 
 //-------------------------------------------------------------
 // Registers / Wires
@@ -139,7 +139,7 @@ if (rst_i)
 else if (~hold_i)
     result_e3_q <= result_e2_q;
 
-assign writeback_value_o  = (MULT_STAGES == 3) ? result_e3_q : result_e2_q;
+assign writeback_value_o  = (MULT_STAGES == 2) ? result_e3_q : result_e2_q;
 
 
 endmodule

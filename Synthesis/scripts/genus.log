@@ -1,0 +1,48 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2024 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[17:06:05.456089] Configured Lic search path (21.01-s002): 27001@200.132.35.25
+
+Version: 21.19-s055_1, built Wed May 29 12:33:07 PDT 2024
+Options: -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite -files /scripts/.tcl 
+Date:    Tue Nov 25 17:06:05 2025
+Host:    ecomp (x86_64 w/Linux 4.18.0-553.74.1.el8_10.x86_64) (4cores*4cpus*1physical cpu*Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz 6144KB) (32527232KB)
+PID:     578853
+OS:      Rocky Linux release 8.10 (Green Obsidian)
+
+
+[17:06:05.096369] Periodic Lic check successful
+[17:06:05.096393] Feature usage summary:
+[17:06:05.096393] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (11 seconds elapsed).
+
+
+[17:06:16.046850] Periodic Lic check successful
+[17:06:16.046866] Feature usage summary:
+[17:06:16.046867] Genus_Synthesis
+[17:06:16.046867] Genus_Physical_Opt
+Checking out license: Genus_Physical_Opt
+
+#@ Processing -files option
+@genus 1> source /scripts/.tcl
+File '/scripts/.tcl' does not exist.
+Encountered problems processing file: /scripts/.tcl
+
+Lic Summary:
+[17:06:16.073834] Cdslmd servers: gmicro0
+[17:06:16.073848] Feature usage summary:
+[17:06:16.073848] Genus_Synthesis
+[17:06:16.073849] Genus_Physical_Opt
+
+Abnormal exit.Abnormal exit.

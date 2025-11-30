@@ -1,0 +1,10 @@
+xrun(64): 23.09-s013: (c) Copyright 1995-2024 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	23.09-s013: Started on Oct 25, 2025 at 20:10:11 -03
+xrun
+	-v2001
+	/new_multiplier.v
+	/new_multiplier_tb.sv
+	+define+CLA4x4
+xrun: *E,FILEMIS: Cannot find the provided file /new_multiplier.v.
+xrun: *E,FILEMIS: Cannot find the provided file /new_multiplier_tb.sv.
+TOOL:	xrun(64)	23.09-s013: Exiting on Oct 25, 2025 at 20:10:11 -03  (total: 00:00:00)
