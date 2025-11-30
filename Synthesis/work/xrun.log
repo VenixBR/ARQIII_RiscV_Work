@@ -1,19 +1,19 @@
 xrun: 23.03-s005: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun	23.03-s005: Started on Nov 30, 2025 at 18:24:21 -03
+TOOL:	xrun	23.03-s005: Started on Nov 30, 2025 at 18:37:19 -03
 xrun
 	-v2001
 	/home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v
 	/home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv
 	-access +rwc
 	+define+CLA4x4
+Recompiling... reason: file '/home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v' is newer than expected.
+	expected: Sun Nov 30 18:24:17 2025
+	actual:   Sun Nov 30 18:36:34 2025
 		Caching library 'worklib' ....... Done
 	Elaborating the design hierarchy:
 	Top level design units:
 		new_multiplier_tb
 	Building instance overlay tables: .................... Done
-	Generating native compiled code:
-		worklib.biriscv_multiplier:v <0x6d7c8349>
-			streams:  23, words: 41121
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
@@ -43,4 +43,4 @@ xcelium> run
 Simulation complete via $finish(1) at time 180 NS + 0
 /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv:89         $finish;
 xcelium> exit
-TOOL:	xrun	23.03-s005: Exiting on Nov 30, 2025 at 18:24:21 -03  (total: 00:00:00)
+TOOL:	xrun	23.03-s005: Exiting on Nov 30, 2025 at 18:37:19 -03  (total: 00:00:00)

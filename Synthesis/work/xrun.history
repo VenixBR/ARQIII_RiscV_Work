@@ -293,3 +293,4 @@ s292(30Nov2025:18:23:47):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work
 s293(30Nov2025:18:24:11):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v -access +rwc 
 s294(30Nov2025:18:24:18):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v -access +rwc 
 s295(30Nov2025:18:24:21):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
+s296(30Nov2025:18:37:19):  xrun -v2001 /home/schultz/Documents/ARQIII_RiscV_Work/src/core/new_multiplier.v /home/schultz/Documents/ARQIII_RiscV_Work/tb/new_multiplier_tb.sv -access +rwc +define+CLA4x4 
