@@ -119,10 +119,10 @@ syn_generic ${HDL_NAME}
 syn_map ${HDL_NAME} 
 get_db insts .base_cell.name -u ;# List all cell names used in the current design.
 
-
 #-----------------------------------------------------------------------------
 # Preparing and generating output data (reports, verilog netlist)
 #-----------------------------------------------------------------------------
+
 report_design_rules ;# > ${RPT_DIR}/${HDL_NAME}_drc.rpt
 report_area -detail > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_area_detail.rpt
 report_timing > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_timing.rpt

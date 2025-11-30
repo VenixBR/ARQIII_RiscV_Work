@@ -2,7 +2,7 @@
 #-----------------------------------------------------------------------------
 # Common path variables (directory structure dependent)
 #-----------------------------------------------------------------------------
-set SYNT_DIR ${PROJECT_DIR}/Synthesis_mul
+set SYNT_DIR ${PROJECT_DIR}/Synthesis_div
 set SCRIPT_DIR ${SYNT_DIR}/scripts
 set RPT_DIR ${SYNT_DIR}/reports
 set DEV_DIR ${SYNT_DIR}/deliverables
