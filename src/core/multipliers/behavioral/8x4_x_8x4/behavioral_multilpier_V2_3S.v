@@ -168,15 +168,22 @@ module biriscv_multiplier
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
                     pipe_stage_s[j] <= 8'h00;
-                    upper_reg <= 1'b0;
                 end
                 else if(~hold_i) begin
                     pipe_stage_s[j] <= AxB_8b_s[j];
-                    upper_reg <= upper_S1_s;
                 end
             end
         end
     endgenerate
+
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            upper_reg <= 1'b0;
+        end
+        else if(~hold_i) begin
+            upper_reg <= upper_S1_s;
+        end
+    end
 
     
 
@@ -341,15 +348,22 @@ module biriscv_multiplier
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
                     pipe_stage2_s[j] <= 64'h0000000000000000;
-                    upper2_reg <= 1'b0;
                 end
                 else if(~hold_i) begin
                     pipe_stage2_s[j] <= mult_result_s[48+j];
-                    upper2_reg <= upper_reg;
                 end
             end
         end
     endgenerate
+
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            upper2_reg <= 1'b0;
+        end
+        else if(clk_i && ~hold_i) begin
+            upper2_reg <= upper_reg;
+        end
+    end
 
 
 

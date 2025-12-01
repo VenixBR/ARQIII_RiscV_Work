@@ -1,6 +1,6 @@
 // 3-stage pipelined multiplier (behavioral, broken into partials)
 // Supports RISC-V MUL, MULH, MULHSU, MULHU selected by funct3 (opcode[14:12])
-module biriscv_multiplier_pipe3
+module biriscv_multiplier
 (
     input           clk_i,
     input           rst_i,
@@ -33,23 +33,13 @@ module biriscv_multiplier_pipe3
     reg sigA_s0, sigB_s0, upper_s0;
     reg [2:0] funct3_s0;
 
-    always @(posedge clk_i or posedge rst_i) begin
-        if (rst_i) begin
-            A_s0 <= 32'd0;
-            B_s0 <= 32'd0;
-            sigA_s0 <= 1'b0;
-            sigB_s0 <= 1'b0;
-            upper_s0 <= 1'b0;
-            funct3_s0 <= 3'd0;
-        end else begin
-            // Simple capture (ignores opcode_valid_i and hold_i for clarity)
-            A_s0 <= opcode_ra_operand_i;
-            B_s0 <= opcode_rb_operand_i;
-            sigA_s0 <= sigA_stage0;
-            sigB_s0 <= sigB_stage0;
-            upper_s0 <= upper_stage0;
-            funct3_s0 <= funct3_s;
-        end
+    always@* begin
+            A_s0 = opcode_ra_operand_i;
+            B_s0 = opcode_rb_operand_i;
+            sigA_s0 = sigA_stage0;
+            sigB_s0 = sigB_stage0;
+            upper_s0 = upper_stage0;
+            funct3_s0 = funct3_s;
     end
 
     // -------------------------
@@ -163,19 +153,20 @@ module biriscv_multiplier_pipe3
             product64_s2 <= 64'd0;
             upper_s2 <= 1'b0;
             funct3_s2 <= 3'd0;
-            writeback_value_o <= 32'd0;
         end else begin
             // compute p3 then combine (p3_comb depends on A_s1_for_p3_hi/B_s1_for_p3_hi and sig flags)
             product64_s2 <= product64;
             upper_s2 <= upper_s1;
             funct3_s2 <= funct3_s1;
+        end
+    end
 
-            // output from this cycle is the result of 2 cycles earlier inputs
+    always@* begin
+                    // output from this cycle is the result of 2 cycles earlier inputs
             if (upper_s2)
                 writeback_value_o <= product64_s2[63:32];
             else
                 writeback_value_o <= product64_s2[31:0];
-        end
     end
 
 endmodule

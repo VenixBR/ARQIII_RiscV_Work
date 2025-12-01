@@ -1,24 +1,29 @@
 module biriscv_multiplier
 (
     // Inputs
-    input               clk_i,
-    input               rst_i,
-    input               opcode_valid_i,
-    input   [31:0]      opcode_opcode_i,
-    input   [31:0]      opcode_ra_operand_i,
-    input   [31:0]      opcode_rb_operand_i,
-    input               hold_i,
+     input           clk_i
+    ,input           rst_i
+    ,input           opcode_valid_i
+    ,input  [ 31:0]  opcode_opcode_i
+    ,input  [ 31:0]  opcode_pc_i
+    ,input           opcode_invalid_i
+    ,input  [  4:0]  opcode_rd_idx_i
+    ,input  [  4:0]  opcode_ra_idx_i
+    ,input  [  4:0]  opcode_rb_idx_i
+    ,input  [ 31:0]  opcode_ra_operand_i
+    ,input  [ 31:0]  opcode_rb_operand_i
+    ,input           hold_i
 
     // Outputs
-    output  [31:0]      writeback_value_o
+    ,output [ 31:0]  writeback_value_o
 );
-
+    
     /*===============================
-            OPCODES
+                OPCODES
     =================================
     +--------+------------+------------+------------+
     | INST   | funct7 (7) | funct3 (3) | opcode (7) |
-    |        |   31 - 25  |   14 - 12  |   6 - 0    |
+    |        |  31 - 25   |   14 - 12  |   6 - 0    |
     +--------+------------+------------+------------+
     | MUL    |   0000001  |    000     |   0110011  |
     | MULH   |   0000001  |    001     |   0110011  |
@@ -31,194 +36,275 @@ module biriscv_multiplier
     | REMU   |   0000001  |    111     |   0110011  |
     +--------+------------+------------+-----------*/
 
+    // Funct3 from multiplication opcodes
     localparam MUL    = 3'b000;
     localparam MULH   = 3'b001;
     localparam MULHSU = 3'b010;
     localparam MULHU  = 3'b011;
 
-    localparam PP_WIDTH = 65;
-    localparam NUM_PPS  = 16;
-    
-    //================================================================
-    // STAGE 1: DECODE AND PARTIAL PRODUCT GENERATION (Combinational)
-    //================================================================
+    // Stage 1 Signals
+    wire [2:0] funct3_s;             // Funct3 of opcode
+    reg ext_A_S1_s;                  // Indicate if A needs be extended
+    reg ext_B_S1_s;                  // Indicate if B needs be extended
+    reg upper_S1_s;                  // Indicate if the output will be the lower or upper part of answer
+    wire [31:0] mux_a_S1_s [31:0];   // 32 Mux to select between A or 0
+    wire B_msb_S1_s;                 // MSB of A
+    wire B_sig_or_unsig_S1_s;        // Set if B is signed or unsigned
+    reg  [31:0] B_inverted_S1_s;            // Store B inverted
+    reg  [31:0] A_inverted_S1_s;            // Store A inverted
+    reg  [63:0] Stage1_s [31:0];
+    reg  [63:0] Stage2_s [3:0];
+    reg Reg_upper_S1_s;
+    reg Reg_upper_S2_s;
 
-    // Control Signals
-    wire [2:0] funct3_s;
-    reg ext_A_s;
-    reg ext_B_s;
-    reg upper_s;
+    // Stage 2 Signals
+    wire [63:0] A_ext_S2_s [31:0];
+    wire [63:0] A_sft_S2_s [31:0];
+    wire [63:0] Add_L1_S2_s [15:0];
+    wire [63:0] Add_L2_S2_s [7:0];
 
-    // Radix-4 Booth Signals
-    wire [32:0] operand_a_33b_s;
-    wire [32:0] operand_b_33b_s;
-    wire [PP_WIDTH-1:0] pp_scaled_s [NUM_PPS-1:0];
-    
+    // Stage 3 signals
+    wire [63:0] Add_L3_S3_s [3:0];
+    wire [63:0] Add_L4_S3_s [1:0];
+    wire [63:0] Add_L5_S3_s;
+    reg Reg_upper_S3_s;
+    wire [31:0] final_result_s;
+    reg [31:0] Stage3_s;
+
+    /*#####################################################################
+    ##                                                                   ##
+    ##    ######  ########  #######  ########  #######      ####         ##
+    ##    ##         ##     ##   ##  ##        ##          ## ##         ##
+    ##    ######     ##     #######  ##  ####  #####          ##         ##
+    ##        ##     ##     ##   ##  ##    ##  ##             ##         ##
+    ##    ######     ##     ##   ##  ########  #######     ########      ##
+    ##                                                                   ## 
+    #####################################################################*/
+
+
+
     /*===============================
-            CONTROL
+                CONTROL
     ===============================*/
+
+
+    // Take the funct3 from opcode, bits 12, 13 and 14.
     assign funct3_s = opcode_opcode_i[14:12];
 
-    always @(opcode_valid_i or funct3_s) begin
-        // Default values to avoid latches
-        ext_A_s = 1'b0;
-        ext_B_s = 1'b0;
-        upper_s = 1'b0;
-        if (opcode_valid_i) begin
-            case (funct3_s)
-                MUL: begin
-                    ext_A_s = 1'b0;
-                    ext_B_s = 1'b0;
-                    upper_s = 1'b0;
-                end
-                MULH: begin
-                    ext_A_s = 1'b1;
-                    ext_B_s = 1'b1;
-                    upper_s = 1'b1;
-                end
-                MULHU: begin
-                    ext_A_s = 1'b0;
-                    ext_B_s = 1'b0;
-                    upper_s = 1'b1;
-                end
-                MULHSU: begin
-                    ext_A_s = 1'b1;
-                    ext_B_s = 1'b0;
-                    upper_s = 1'b1;
-                end
-                default: begin // Division opcodes or others
-                    ext_A_s = 1'b0;
-                    ext_B_s = 1'b0;
-                    upper_s = 1'b0;
-                end
-            endcase
-        end
+    // Set the signals to control the operations
+    always@* begin
+        case (funct3_s)
+            MUL : begin
+                ext_A_S1_s = 1'b0;
+                ext_B_S1_s = 1'b0;
+                upper_S1_s = 1'b0;
+            end
+            MULH : begin
+                ext_A_S1_s = 1'b1;
+                ext_B_S1_s = 1'b1;
+                upper_S1_s = 1'b1;
+            end
+            MULHU : begin
+                ext_A_S1_s = 1'b0;
+                ext_B_S1_s = 1'b0;
+                upper_S1_s = 1'b1;
+            end
+            MULHSU : begin
+                ext_A_S1_s = 1'b1;
+                ext_B_S1_s = 1'b0;
+                upper_S1_s = 1'b1;
+            end
+            default : begin // Division instructions, do MUL
+                ext_A_S1_s = 1'b0;
+                ext_B_S1_s = 1'b0;
+                upper_S1_s = 1'b0;
+            end
+        endcase
     end
 
     /*===============================
-        PREPARE OPERANDS (33-bit)
-    ===============================*/
-    assign operand_a_33b_s = opcode_valid_i ? (ext_A_s ? {opcode_ra_operand_i[31], opcode_ra_operand_i} : {1'b0, opcode_ra_operand_i}) : 33'b0;
-    assign operand_b_33b_s = opcode_valid_i ? (ext_B_s ? {opcode_rb_operand_i[31], opcode_rb_operand_i} : {1'b0, opcode_rb_operand_i}) : 33'b0;
+              INVERT A AND B
+    =================================
+    B need be positive if multiplication is signed.
+
+     A  x  B =  AB           --> no invert nothing
+    -A  x  B = -AB           --> no invert nothing
+    -A  x -B =  AB =  A x B  --> invert both
+     A  x -B = -AB = -A x B  --> invert both 
+
+    */
+
+    // Take the MSB of B
+    assign B_msb_S1_s = opcode_rb_operand_i[31];
+
+    // This signal indicates if B and A need be inverted
+    assign B_sig_or_unsig_S1_s = ext_B_S1_s && B_msb_S1_s;
+
+    // Invert A and B or not
+    always@* begin
+        if(B_sig_or_unsig_S1_s == 1'b1) begin
+            B_inverted_S1_s = ~opcode_rb_operand_i + 32'h00000001;
+            A_inverted_S1_s = ~opcode_ra_operand_i + 32'h00000001;
+        end
+        else begin
+            B_inverted_S1_s = opcode_rb_operand_i;
+            A_inverted_S1_s = opcode_ra_operand_i;
+        end
+    end
+
     
-    /*===============================
-        RADIX-4 BOOTH PARTIAL PRODUCTS
-    ===============================*/
-    wire [PP_WIDTH-1:0] op_a_plus1_s;
-    wire [PP_WIDTH-1:0] op_a_plus2_s;
-    wire [PP_WIDTH-1:0] op_a_neg1_s;
-    wire [PP_WIDTH-1:0] op_a_neg2_s;
-
-    assign op_a_plus1_s = $signed(operand_a_33b_s);
-    assign op_a_plus2_s = $signed(operand_a_33b_s) << 1;
-    assign op_a_neg1_s  = -$signed(operand_a_33b_s);
-    assign op_a_neg2_s  = -($signed(operand_a_33b_s) << 1);
-
+    
     genvar i;
     generate
-        for (i = 0; i < NUM_PPS; i = i + 1) begin : gen_partial_products
-            wire [2:0] booth_in;
-            reg  [PP_WIDTH-1:0] pp_unscaled;
 
-            assign booth_in[0] = (i == 0) ? 1'b0 : operand_b_33b_s[2*i-1];
-            assign booth_in[1] = operand_b_33b_s[2*i];
-            assign booth_in[2] = operand_b_33b_s[2*i+1];
+        /*===============================
+                    MULTIPLEXERS
+        ===============================*/
 
-            always @(booth_in or op_a_plus1_s or op_a_plus2_s or op_a_neg1_s or op_a_neg2_s) begin // Radix-4 Enconder
-                case (booth_in)
-                    3'b000, 3'b111: pp_unscaled = {PP_WIDTH{1'b0}};
-                    3'b001, 3'b010: pp_unscaled = op_a_plus1_s;
-                    3'b011:         pp_unscaled = op_a_plus2_s;
-                    3'b100:         pp_unscaled = op_a_neg2_s;
-                    3'b101, 3'b110: pp_unscaled = op_a_neg1_s;
-                    default:        pp_unscaled = {PP_WIDTH{1'b0}};
-                endcase
-            end 
-            
-            assign pp_scaled_s[i] = pp_unscaled << (2 * i);
+        for (i=0 ; i<32 ; i=i+1) begin
+            assign mux_a_S1_s[i] = (B_inverted_S1_s[i]==1'b1) ?  A_inverted_S1_s : 32'h00000000;  // TEST ? VALUE_IF_TRUE : VALUE_IF_FALSE ;
+        end
+
+
+        /*===============================
+                    EXTEND A
+        ===============================*/
+
+        // if is signed extend the signal, else concatenate 0
+        for (i=0 ; i<32 ; i=i+1) begin
+            assign A_ext_S2_s[i] = (ext_A_S1_s==1'b1) ? {{32{mux_a_S1_s[i][31]}} ,mux_a_S1_s[i]} : {32'h00000000 ,mux_a_S1_s[i]};
+        end
+
+
+        /*===============================
+                    SHIFT A
+        ===============================*/
+
+        // if is signed extend the signal, else concatenate 0
+        for (i=0 ; i<32 ; i=i+1) begin
+            assign A_sft_S2_s[i] = A_ext_S2_s[i] << i;
+        end
+
+
+        /*===============================
+                STAGE 1 PIPE REGISTER
+        ===============================*/
+
+        for (i=0 ; i<32 ; i=i+1) begin
+            always@(posedge clk_i, posedge rst_i)begin
+                if(rst_i) begin
+                    Stage1_s[i] <= 64'h0000000000000000;
+                end
+                else if(~hold_i) begin
+                    Stage1_s[i] <= A_sft_S2_s[i];
+                end
+            end
         end
     endgenerate
 
-    //================================================================
-    // PIPELINE REGISTER 1 (Stage 1 -> Stage 2)
-    //================================================================
-    reg [PP_WIDTH-1:0] pp_scaled_s_p1_r [NUM_PPS-1:0];
-    reg                upper_s_p1_r;
-
-    always @(posedge clk_i) begin : reg_logic_p1
-        integer j;
-        if (rst_i) begin
-            upper_s_p1_r <= 1'b0;
-            for (j = 0; j < NUM_PPS; j = j + 1) begin
-                pp_scaled_s_p1_r[j] <= {PP_WIDTH{1'b0}};
-            end
-        end else if (~hold_i) begin
-            upper_s_p1_r <= upper_s;
-            for (j = 0; j < NUM_PPS; j = j + 1) begin
-                pp_scaled_s_p1_r[j] <= pp_scaled_s[j];
-            end
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            Reg_upper_S1_s <= 1'b0;
+        end
+        else if(clk_i && ~hold_i) begin
+            Reg_upper_S1_s <= upper_S1_s;
         end
     end
 
-    //================================================================
-    // STAGE 2: ADDER TREE LEVELS 1 AND 2 (Combinational)
-    //================================================================
-    wire [PP_WIDTH-1:0] Add_L1_s [7:0];
-    wire [PP_WIDTH-1:0] Add_L2_s [3:0];
-    
-    genvar l; 
+
+    /*#####################################################################
+    ##                                                                   ##
+    ##    ######  ########  #######  ########  #######     ########      ##
+    ##    ##         ##     ##   ##  ##        ##                ##      ##
+    ##    ######     ##     #######  ##  ####  #####       ########      ##
+    ##        ##     ##     ##   ##  ##    ##  ##          ##            ##
+    ##    ######     ##     ##   ##  ########  #######     ########      ##
+    ##                                                                   ## 
+    #####################################################################*/
+
+
+    genvar j;
     generate
-        for (l=0 ; l<8 ; l=l+1) begin
-            assign Add_L1_s[l] = pp_scaled_s_p1_r[l*2] + pp_scaled_s_p1_r[l*2+1];
+
+        /*===============================
+                    ADD 3 LAYERS
+        ===============================*/
+
+        for (j=0 ; j<16 ; j=j+1) begin
+            assign Add_L1_S2_s[j] = Stage1_s[j*2] + Stage1_s[j*2+1];
+        end
+
+        for (j=0 ; j<8 ; j=j+1) begin
+            assign Add_L2_S2_s[j] = Add_L1_S2_s[j*2] + Add_L1_S2_s[j*2+1];
+        end
+
+        for (j=0 ; j<4 ; j=j+1) begin
+            assign Add_L3_S3_s[j] = Add_L2_S2_s[j*2] + Add_L2_S2_s[j*2+1];       
+        end
+
+
+        /*===============================
+                STAGE 2 PIPE REGISTER
+        ===============================*/
+
+        for (j=0 ; j<4 ; j=j+1) begin
+            always@(posedge clk_i, posedge rst_i)begin
+                if(rst_i) begin
+                    Stage2_s[j] <= 64'h0000000000000000;
+                end
+                else if(clk_i && ~hold_i) begin
+                    Stage2_s[j] <= Add_L3_S3_s[j];
+                end
+            end
         end
     endgenerate
 
-    genvar m;
-    generate
-        for (m=0 ; m<4 ; m=m+1) begin
-            assign Add_L2_s[m] = Add_L1_s[m*2] + Add_L1_s[m*2+1];
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            Reg_upper_S2_s <= 1'b0;
         end
-    endgenerate
-
-    //================================================================
-    // PIPELINE REGISTER 2 (Stage 2 -> Stage 3)
-    //================================================================
-    reg [PP_WIDTH-1:0] Add_L2_s_p2_r [3:0];
-    reg                upper_s_p2_r;
-
-    always @(posedge clk_i) begin : reg_logic_p2
-        integer j;
-        if (rst_i) begin
-            upper_s_p2_r <= 1'b0;
-            for (j = 0; j < 4; j = j + 1) begin
-                 Add_L2_s_p2_r[j] <= {PP_WIDTH{1'b0}};
-            end
-        end else if (~hold_i) begin
-            upper_s_p2_r <= upper_s_p1_r;
-            for (j = 0; j < 4; j = j + 1) begin
-                Add_L2_s_p2_r[j] <= Add_L2_s[j];
-            end
+        else if(clk_i && ~hold_i) begin
+            Reg_upper_S2_s <= Reg_upper_S1_s;
         end
     end
 
-    //================================================================
-    // STAGE 3: ADDER TREE LEVEL 3, FINAL ADDITION AND SELECTION (Combinational)
-    //================================================================
-    wire [PP_WIDTH-1:0] Add_L3_s [1:0];
-    wire [PP_WIDTH-1:0] final_result_s;
-
-    genvar n;
-    generate
-        for (n=0 ; n<2 ; n=n+1) begin
-            assign Add_L3_s[n] = Add_L2_s_p2_r[n*2] + Add_L2_s_p2_r[n*2+1];
-        end
-    endgenerate
-    
-    assign final_result_s = Add_L3_s[0] + Add_L3_s[1];
+    /*#####################################################################
+    ##                                                                   ##
+    ##    ######  ########  #######  ########  #######     ########      ##
+    ##    ##         ##     ##   ##  ##        ##                ##      ##
+    ##    ######     ##     #######  ##  ####  #####       ########      ##
+    ##        ##     ##     ##   ##  ##    ##  ##                ##      ##
+    ##    ######     ##     ##   ##  ########  #######     ########      ##
+    ##                                                                   ## 
+    #####################################################################*/
 
     /*===============================
-        FINAL RESULT SELECTION
+                ADD 2 LAYERS
     ===============================*/
-    assign writeback_value_o = upper_s_p2_r ? final_result_s[63:32] : final_result_s[31:0];
+
+    assign Add_L4_S3_s[0] = Stage2_s[0] + Stage2_s[1];
+    assign Add_L4_S3_s[1] = Stage2_s[2] + Stage2_s[3];
+
+    assign Add_L5_S3_s = Add_L4_S3_s[0] + Add_L4_S3_s[1];
+
+    /*===============================
+                LOW/UPPER MUX
+    ===============================*/
+
+    assign final_result_s = (Reg_upper_S2_s==1'b1) ? Add_L5_S3_s[63:32] : Add_L5_S3_s[31:0];
+
+    always@(posedge clk_i, posedge rst_i) begin
+        if (rst_i) begin
+            Stage3_s <= 32'h00000000;
+        end
+        else if(clk_i && ~hold_i) begin
+            Stage3_s <= final_result_s;
+        end
+    end
+
+    assign writeback_value_o = Stage3_s;
+
+    
+    
 
 endmodule

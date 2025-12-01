@@ -17,6 +17,14 @@ Multiplier:
 		xrun -v2001 ${RTL_DIR}/new_multiplier.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
 	fi
 
+Divisor:
+	cd ${ROOT}/Synthesis_div/work && \
+	if [ "$(TB)" = "0" ]; then \
+		xrun -v2001 ${RTL_DIR}/biriscv_divider.v $(FLAGS); \
+	else \
+		xrun -v2001 ${RTL_DIR}/biriscv_divider.v ${TESTS_DIR}/new_multiplier_tb.sv $(FLAGS) +define+CLA4x4; \
+	fi
+
 ControlPath:
 	cd ${ROOT}/Work && \
 	if [ "$(TB)" = "0" ]; then \

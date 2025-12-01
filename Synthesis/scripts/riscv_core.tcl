@@ -100,8 +100,8 @@ report_timing -lint > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_timing
 #-----------------------------------------------------------------------------
 set_db auto_ungroup both ;# (none|both) ungrouping will not be performed
 
-set_db hinst:riscv_core/u_mul .ungroup_ok false
-set_db hinst:riscv_core/u_div .ungroup_ok false
+# set_db hinst:riscv_core/u_mul .ungroup_ok false
+# set_db hinst:riscv_core/u_div .ungroup_ok false
 
 ## Layout Error Solved
 # foreach lc [get_db base_cells -if {.site == "*CoreSiteDouble*"}] {

@@ -186,16 +186,22 @@ module biriscv_multiplier
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
                     Stage1_s[i] <= 64'h0000000000000000;
-                    Reg_upper_S1_s <= 1'b0;
                 end
                 else if(~hold_i) begin
                     Stage1_s[i] <= A_sft_S2_s[i];
-                    Reg_upper_S1_s <= upper_S1_s;
                 end
             end
         end
-
     endgenerate
+
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            Reg_upper_S1_s <= 1'b0;
+        end
+        else if(clk_i && ~hold_i) begin
+            Reg_upper_S1_s <= upper_S1_s;
+        end
+    end
 
 
     /*#####################################################################
@@ -237,15 +243,22 @@ module biriscv_multiplier
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
                     Stage2_s[j] <= 64'h0000000000000000;
-                    Reg_upper_S2_s <= 1'b0;
                 end
-                else if(~hold_i) begin
+                else if(clk_i && ~hold_i) begin
                     Stage2_s[j] <= Add_L3_S3_s[j];
-                    Reg_upper_S2_s <= Reg_upper_S1_s;
                 end
             end
         end
     endgenerate
+
+    always@(posedge clk_i, posedge rst_i)begin
+        if(rst_i) begin
+            Reg_upper_S2_s <= 1'b0;
+        end
+        else if(clk_i && ~hold_i) begin
+            Reg_upper_S2_s <= Reg_upper_S1_s;
+        end
+    end
 
     /*#####################################################################
     ##                                                                   ##

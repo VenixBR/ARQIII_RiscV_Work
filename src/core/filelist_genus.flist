@@ -15,5 +15,4 @@ biriscv_multiplier.v
 biriscv_npc.v
 biriscv_pipe_ctrl.v
 biriscv_regfile.v
-biriscv_trace_sim.v
 riscv_core.v
