@@ -1,17 +1,41 @@
 module biriscv_multiplier
 (
-    // Inputs
+   // Inputs
      input           clk_i
     ,input           rst_i
     ,input           opcode_valid_i
     ,input  [ 31:0]  opcode_opcode_i
+    ,input  [ 31:0]  opcode_pc_i
+    ,input           opcode_invalid_i
+    ,input  [  4:0]  opcode_rd_idx_i
+    ,input  [  4:0]  opcode_ra_idx_i
+    ,input  [  4:0]  opcode_rb_idx_i
     ,input  [ 31:0]  opcode_ra_operand_i
     ,input  [ 31:0]  opcode_rb_operand_i
     ,input           hold_i
 
     // Outputs
+    ,output stall_o
     ,output [ 31:0]  writeback_value_o
 );
+
+
+// mul
+`define INST_MUL 32'h2000033
+`define INST_MUL_MASK 32'hfe00707f
+
+// mulh
+`define INST_MULH 32'h2001033
+`define INST_MULH_MASK 32'hfe00707f
+
+// mulhsu
+`define INST_MULHSU 32'h2002033
+`define INST_MULHSU_MASK 32'hfe00707f
+
+// mulhu
+`define INST_MULHU 32'h2003033
+`define INST_MULHU_MASK 32'hfe00707f
+
     
     /*===============================
                 OPCODES
@@ -70,6 +94,13 @@ module biriscv_multiplier
                 CONTROL
     ===============================*/
 
+    wire mult_inst_w;
+
+    assign mult_inst_w    = ((opcode_opcode_i & `INST_MUL_MASK) == `INST_MUL)        || 
+                      ((opcode_opcode_i & `INST_MULH_MASK) == `INST_MULH)      ||
+                      ((opcode_opcode_i & `INST_MULHSU_MASK) == `INST_MULHSU)  ||
+                      ((opcode_opcode_i & `INST_MULHU_MASK) == `INST_MULHU);
+
 
     // Take the funct3 from opcode, bits 12, 13 and 14.
     assign funct3_s = opcode_opcode_i[14:12];
@@ -122,6 +153,8 @@ module biriscv_multiplier
     assign A_9b_s = (sig_A_S1_s==1'b1) ? {A_8b_s[3][7] ,A_8b_s[3]} : {1'b0 ,A_8b_s[3]};
     assign B_9b_s = (sig_B_S1_s==1'b1) ? {B_8b_s[3][7] ,B_8b_s[3]} : {1'b0 ,B_8b_s[3]};
 
+    reg stall_s_p1_r;
+
     always@(posedge clk_i, posedge rst_i)begin
         if(rst_i) begin
             pipe_stage_8b_s[0] <= 8'b00000000;
@@ -133,6 +166,7 @@ module biriscv_multiplier
             pipe_stage_9b_s[0] <= 9'b000000000;
             pipe_stage_9b_s[1] <= 9'b000000000;
             upper_reg <= 1'b0;
+            stall_s_p1_r <= 1'b0;
         end
         else if(clk_i && ~hold_i) begin
             pipe_stage_8b_s[0] <= A_8b_s[0];
@@ -144,6 +178,7 @@ module biriscv_multiplier
             pipe_stage_8b_s[5] <= B_8b_s[2];
             pipe_stage_9b_s[1] <= B_9b_s;
             upper_reg <= upper_S1_s;
+            stall_s_p1_r <= mult_inst_w;
         end
     end
 
@@ -170,6 +205,8 @@ module biriscv_multiplier
     endgenerate
 
 
+    reg stall_s_p2_r;
+
     generate
         for (j=0 ; j<16 ; j=j+1) begin
             always@(posedge clk_i, posedge rst_i)begin
@@ -186,10 +223,14 @@ module biriscv_multiplier
     always@(posedge clk_i, posedge rst_i)begin
         if(rst_i) begin
             upper2_reg <= 1'b0;
+            stall_s_p2_r <= 1'b0;
         end
         else if(clk_i && ~hold_i) begin
             upper2_reg <= upper_reg;
+            stall_s_p2_r <= stall_s_p1_r;
         end
+        else    
+            stall_s_p2_r <= 1'b0;
     end
 
 
@@ -236,16 +277,28 @@ module biriscv_multiplier
             3 LAYERS ADDER
     ===============================*/
 
+    wire [31:0] final_result_s;
+    reg [31:0] result_64_r;
 
     assign mult_result_s[14] = sft_mult_s[0] + sft_mult_s[1] + sft_mult_s[2] + sft_mult_s[3] +
                            sft_mult_s[4] + sft_mult_s[5] + sft_mult_s[6] + sft_mult_s[7] + 
                            sft_mult_s[8] + sft_mult_s[9] + sft_mult_s[10] + sft_mult_s[11] +
                            sft_mult_s[12] + sft_mult_s[13] + sft_mult_s[14] + sft_mult_s[15];
 
+    assign final_result_s = (upper2_reg==1'b1) ? mult_result_s[14][63:32] : mult_result_s[14][31:0];
 
 
+    always@(posedge clk_i, posedge rst_i) begin
+        if(rst_i) begin
+            result_64_r <= 32'h00000000;
+        end
+        else if (clk_i && hold_i) begin
+            result_64_r <= final_result_s;
+        end
+    end
 
-    assign writeback_value_o = (upper2_reg==1'b1) ? mult_result_s[14][63:32] : mult_result_s[14][31:0];
+    assign stall_o = stall_s_p2_r;
+    assign writeback_value_o = final_result_s;
     
 
 endmodule

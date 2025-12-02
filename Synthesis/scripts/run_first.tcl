@@ -7,7 +7,7 @@
 
 
 # Para executar o GENUS
-cd ${SYNTHESIS_DIR_DIR}/work
+cd ../work
 echo "${PROJECT_DIR}"
 ## apenas o programa
 #genus -abort_on_error -lic_startup Genus_Synthesis -lic_startup_options Genus_Physical_Opt -log genus -overwrite

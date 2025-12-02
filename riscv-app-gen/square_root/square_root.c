@@ -16,6 +16,6 @@ int square_root (int value){
 
 int main(){
     int input  = 100;
-    square_root(input);
-    
+    int x = square_root(input);
+    return x;
 }

@@ -6,7 +6,7 @@ OBJDUMP = /opt/riscv/bin/riscv32-unknown-elf-objdump
 READELF = /opt/riscv/bin/riscv32-unknown-elf-readelf
 OBJCOPY = /opt/riscv/bin/riscv32-unknown-elf-objcopy
 
-CFLAGS = -march=rv32im -mabi=ilp32
+CFLAGS = -march=rv32im -mabi=ilp32 -O0
 GCC_LDFLAGS = -T link.ld -nostartfiles -e main -O2
 
 OBJ = $(SRC:.c=.o)

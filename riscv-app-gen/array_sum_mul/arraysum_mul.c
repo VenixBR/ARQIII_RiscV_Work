@@ -1,3 +1,5 @@
+// Compile with -O0
+
 #include <stdio.h>
 
 

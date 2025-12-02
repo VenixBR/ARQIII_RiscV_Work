@@ -99,6 +99,7 @@ wire  [ 31:0]  writeback_mem_value_w;
 wire  [ 31:0]  writeback_div_value_w;
 wire           csr_opcode_valid_w;
 wire           branch_csr_request_w;
+wire stall_mult_s;
 wire  [ 63:0]  mmu_ifetch_inst_w;
 wire           mmu_lsu_error_w;
 wire  [ 31:0]  fetch0_pc_w;
@@ -508,6 +509,7 @@ u_mul
     ,.hold_i(mul_hold_w)
 
     // Outputs
+    ,.stall_o(stall_mult_s)
     ,.writeback_value_o(writeback_mul_value_w)
 );
 
@@ -612,6 +614,7 @@ u_issue
     ,.csr_result_e1_exception_i(csr_result_e1_exception_w)
     ,.lsu_stall_i(lsu_stall_w)
     ,.take_interrupt_i(take_interrupt_w)
+    ,.stall_mult_i(stall_mult_s)
 
     // Outputs
     ,.fetch0_accept_o(fetch0_accept_w)

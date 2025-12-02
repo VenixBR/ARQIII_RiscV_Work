@@ -15,8 +15,29 @@ module biriscv_multiplier
     ,input           hold_i
 
     // Outputs
+    ,output stall_o
     ,output [ 31:0]  writeback_value_o
 );
+
+
+
+// mul
+`define INST_MUL 32'h2000033
+`define INST_MUL_MASK 32'hfe00707f
+
+// mulh
+`define INST_MULH 32'h2001033
+`define INST_MULH_MASK 32'hfe00707f
+
+// mulhsu
+`define INST_MULHSU 32'h2002033
+`define INST_MULHSU_MASK 32'hfe00707f
+
+// mulhu
+`define INST_MULHU 32'h2003033
+`define INST_MULHU_MASK 32'hfe00707f
+
+
 
     /*===============================
              OPCODES
@@ -52,6 +73,14 @@ module biriscv_multiplier
     /*===============================
              CONTROL
     ===============================*/
+
+    wire mult_inst_w;
+
+    assign mult_inst_w    = ((opcode_opcode_i & `INST_MUL_MASK) == `INST_MUL)        || 
+                      ((opcode_opcode_i & `INST_MULH_MASK) == `INST_MULH)      ||
+                      ((opcode_opcode_i & `INST_MULHSU_MASK) == `INST_MULHSU)  ||
+                      ((opcode_opcode_i & `INST_MULHU_MASK) == `INST_MULHU);
+
     assign funct3_s = opcode_opcode_i[14:12];
 
     always @(opcode_valid_i or funct3_s) 
@@ -162,6 +191,7 @@ module biriscv_multiplier
     //================================================================
     reg [PP_WIDTH-1:0] pp_scaled_s_p1_r [NUM_PPS-1:0];
     reg                upper_s_p1_r;
+    reg                stall_s_p1_r;
 
     always @(posedge clk_i) 
     begin : reg_logic_p1
@@ -170,6 +200,7 @@ module biriscv_multiplier
         if (rst_i) 
         begin
             upper_s_p1_r <= 1'b0;
+            stall_s_p1_r <= 1'b0;
             for (j = 0; j < NUM_PPS; j = j + 1) 
             begin
                 pp_scaled_s_p1_r[j] <= {PP_WIDTH{1'b0}};
@@ -178,6 +209,7 @@ module biriscv_multiplier
         else if (!hold_i) 
         begin
             upper_s_p1_r <= upper_s;
+            stall_s_p1_r <= mult_inst_w;
             for (j = 0; j < NUM_PPS; j = j + 1) 
             begin
                 pp_scaled_s_p1_r[j] <= pp_scaled_s[j];
@@ -219,6 +251,7 @@ module biriscv_multiplier
     // Registrador extra para carregar o 17º PP até o estágio final
     reg [PP_WIDTH-1:0] pp_17_p2_r;
     reg                upper_s_p2_r;
+    reg                stall_s_p2_r;
 
     always @(posedge clk_i) 
     begin : reg_logic_p2
@@ -227,6 +260,7 @@ module biriscv_multiplier
         if (rst_i) 
         begin
             upper_s_p2_r <= 1'b0;
+            stall_s_p2_r <= 1'b0;
             pp_17_p2_r   <= {PP_WIDTH{1'b0}};
             for (j = 0; j < 4; j = j + 1) 
             begin
@@ -236,6 +270,7 @@ module biriscv_multiplier
         else if (!hold_i) 
         begin
             upper_s_p2_r <= upper_s_p1_r;
+            stall_s_p2_r <= stall_s_p1_r;
             // Passa o 17º PP (índice 16) adiante
             pp_17_p2_r   <= pp_scaled_s_p1_r[16];
             for (j = 0; j < 4; j = j + 1) 
@@ -243,6 +278,8 @@ module biriscv_multiplier
                 Add_L2_s_p2_r[j] <= Add_L2_s[j];
             end
         end
+        else
+            stall_s_p2_r <= 1'b0;
     end
 
     //================================================================
@@ -268,11 +305,29 @@ module biriscv_multiplier
     // Soma Final: Resultado da Árvore + o 17º PP (que veio viajando pelo pipeline)
     assign final_result_s = sum_tree_result_s + pp_17_p2_r;
 
+
+wire [31:0] result_s;
+    reg [31:0] result_r;
+
+    assign result_s = upper_s_p2_r ? 
+                               final_result_s[63:32] : 
+                               final_result_s[31:0];
+
+    
+
+
+    always@(posedge clk_i, posedge rst_i)begin
+        if (rst_i)
+            result_r <= 32'h00000000;
+        else if (hold_i)
+            result_r <= result_s;
+    end
+
     /*===============================
         FINAL RESULT SELECTION
     ===============================*/
-    assign writeback_value_o = upper_s_p2_r ? 
-                               final_result_s[63:32] : 
-                               final_result_s[31:0];
+    assign stall_o = stall_s_p2_r;
+    assign writeback_value_o = result_r;
+    
 
 endmodule

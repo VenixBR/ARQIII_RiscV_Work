@@ -10,6 +10,11 @@
 # puts "  "
 # puts "  "
 
+set_db super_thread_servers localhost
+set_db max_cpus_per_server 8
+gui_show 
+
+
 #-----------------------------------------------------------------------------
 # Main Custom Variables Design Dependent (set local)
 #-----------------------------------------------------------------------------

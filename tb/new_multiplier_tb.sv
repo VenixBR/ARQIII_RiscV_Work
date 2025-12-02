@@ -40,9 +40,11 @@ module new_multiplier_tb;
         rst = 1;
         #(3*CLK_PERIOD/2)
         rst = 0;
-        // #(3*CLK_PERIOD/2)
-        // hold = 1;
-        #((STAGES+2)*CLK_PERIOD)
+
+        
+        #((STAGES+1)*CLK_PERIOD)
+        hold = 1;
+        #((STAGES)*CLK_PERIOD)
 
         $display("\n+-------------+------------+------------+");
         $display(  "| Instruction |  Expected  |   Answer   |");
@@ -56,9 +58,9 @@ module new_multiplier_tb;
         B_ext = {{32{B_op[31]}}, B_op};
         AxB = A_ext * B_ext;
         hold=0;
-        // #(3*CLK_PERIOD/2)
-        // hold = 1;
         #((STAGES+1)*CLK_PERIOD)
+        hold = 1;
+        #((STAGES)*CLK_PERIOD)
 
         $display(  "| MULH        | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
 
@@ -68,9 +70,9 @@ module new_multiplier_tb;
         B_ext = {32'h00000000, B_op};
         AxB = A_ext * B_ext;
         hold=0;
-        // #(3*CLK_PERIOD/2)
-        // hold = 1;
         #((STAGES+1)*CLK_PERIOD)
+        hold = 1;
+        #((STAGES)*CLK_PERIOD)
 
         $display(  "| MULHSU      | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
 
@@ -80,9 +82,9 @@ module new_multiplier_tb;
         B_ext = {32'h00000000, B_op};
         AxB = A_ext * B_ext;
         hold=0;
-        // #(4*CLK_PERIOD/2)
-        // hold = 1;
         #((STAGES+1)*CLK_PERIOD)
+        hold = 1;
+        #((STAGES)*CLK_PERIOD)
 
         $display(  "| MULHU       | 0x%h | 0x%h |", AxB[63:32] ,answer); //0x00010002
         $display(  "+-------------+------------+------------+\n");

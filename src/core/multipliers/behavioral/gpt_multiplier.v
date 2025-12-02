@@ -2,16 +2,41 @@
 // Supports RISC-V MUL, MULH, MULHSU, MULHU selected by funct3 (opcode[14:12])
 module biriscv_multiplier
 (
-    input           clk_i,
-    input           rst_i,
-    input           opcode_valid_i,
-    input  [31:0]   opcode_opcode_i,
-    input  [31:0]   opcode_ra_operand_i,
-    input  [31:0]   opcode_rb_operand_i,
-    input           hold_i,
+    // Inputs
+     input           clk_i
+    ,input           rst_i
+    ,input           opcode_valid_i
+    ,input  [ 31:0]  opcode_opcode_i
+    ,input  [ 31:0]  opcode_pc_i
+    ,input           opcode_invalid_i
+    ,input  [  4:0]  opcode_rd_idx_i
+    ,input  [  4:0]  opcode_ra_idx_i
+    ,input  [  4:0]  opcode_rb_idx_i
+    ,input  [ 31:0]  opcode_ra_operand_i
+    ,input  [ 31:0]  opcode_rb_operand_i
+    ,input           hold_i
 
-    output reg [31:0] writeback_value_o
+    // Outputs
+    ,output stall_o
+    ,output [ 31:0]  writeback_value_o
 );
+
+
+    // mul
+`define INST_MUL 32'h2000033
+`define INST_MUL_MASK 32'hfe00707f
+
+// mulh
+`define INST_MULH 32'h2001033
+`define INST_MULH_MASK 32'hfe00707f
+
+// mulhsu
+`define INST_MULHSU 32'h2002033
+`define INST_MULHSU_MASK 32'hfe00707f
+
+// mulhu
+`define INST_MULHU 32'h2003033
+`define INST_MULHU_MASK 32'hfe00707f
 
     // funct3
     localparam MUL    = 3'b000;
@@ -41,6 +66,13 @@ module biriscv_multiplier
             upper_s0 = upper_stage0;
             funct3_s0 = funct3_s;
     end
+
+      wire mult_inst_w;
+
+    assign mult_inst_w    = ((opcode_opcode_i & `INST_MUL_MASK) == `INST_MUL)        || 
+                      ((opcode_opcode_i & `INST_MULH_MASK) == `INST_MULH)      ||
+                      ((opcode_opcode_i & `INST_MULHSU_MASK) == `INST_MULHSU)  ||
+                      ((opcode_opcode_i & `INST_MULHU_MASK) == `INST_MULHU);
 
     // -------------------------
     // Stage 1: compute partials p0, p1, p2
@@ -81,6 +113,8 @@ module biriscv_multiplier
     reg sigA_s1, sigB_s1, upper_s1;
     reg [31:0] A_s1_for_p3_hi, B_s1_for_p3_hi; // keep top halves for stage2
     reg [2:0] funct3_s1;
+    reg stall_s_p1_r;
+
 
     always @(posedge clk_i or posedge rst_i) begin
         if (rst_i) begin
@@ -93,7 +127,8 @@ module biriscv_multiplier
             A_s1_for_p3_hi <= 32'd0;
             B_s1_for_p3_hi <= 32'd0;
             funct3_s1 <= 3'd0;
-        end else begin
+            stall_s_p1_r <= 1'b0;
+        end else if(clk_i & ~hold_i) begin
             p0_s1 <= p0_comb;
             p1_s1 <= p1_comb;
             p2_s1 <= p2_comb;
@@ -104,6 +139,7 @@ module biriscv_multiplier
             A_s1_for_p3_hi <= {16'd0, Ah_s0}; // keep raw half bits (lower 16 bits used)
             B_s1_for_p3_hi <= {16'd0, Bh_s0};
             funct3_s1 <= funct3_s0;
+            stall_s_p1_r <= mult_inst_w;
         end
     end
 
@@ -147,26 +183,47 @@ module biriscv_multiplier
     reg [63:0] product64_s2;
     reg upper_s2;
     reg [2:0] funct3_s2;
+    reg stall_s_p2_r;
+
 
     always @(posedge clk_i or posedge rst_i) begin
         if (rst_i) begin
             product64_s2 <= 64'd0;
             upper_s2 <= 1'b0;
             funct3_s2 <= 3'd0;
-        end else begin
+            stall_s_p2_r <= 1'b0;
+        end else if(clk_i && ~hold_i) begin
             // compute p3 then combine (p3_comb depends on A_s1_for_p3_hi/B_s1_for_p3_hi and sig flags)
             product64_s2 <= product64;
             upper_s2 <= upper_s1;
             funct3_s2 <= funct3_s1;
+            stall_s_p2_r <= stall_s_p1_r;
         end
+        else
+            stall_s_p2_r <= 1'b0;
     end
+
+    reg [31:0] final_result_s;
+    reg [31:0] final_reg_s;
 
     always@* begin
                     // output from this cycle is the result of 2 cycles earlier inputs
             if (upper_s2)
-                writeback_value_o <= product64_s2[63:32];
+                final_result_s <= product64_s2[63:32];
             else
-                writeback_value_o <= product64_s2[31:0];
+                final_result_s <= product64_s2[31:0];
     end
+
+    always@(posedge clk_i, posedge rst_i) begin
+        if (rst_i) begin
+            final_reg_s <= 32'h00000000;
+        end
+        else if (clk_i && hold_i) begin
+            final_reg_s <= final_result_s;
+        end
+    end
+
+    assign stall_o = stall_s_p2_r;
+    assign writeback_value_o = final_reg_s;
 
 endmodule

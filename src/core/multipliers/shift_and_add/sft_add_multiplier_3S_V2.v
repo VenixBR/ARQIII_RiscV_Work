@@ -15,27 +15,8 @@ module biriscv_multiplier
     ,input           hold_i
 
     // Outputs
-    ,output stall_o
     ,output [ 31:0]  writeback_value_o
 );
-
-
-// mul
-`define INST_MUL 32'h2000033
-`define INST_MUL_MASK 32'hfe00707f
-
-// mulh
-`define INST_MULH 32'h2001033
-`define INST_MULH_MASK 32'hfe00707f
-
-// mulhsu
-`define INST_MULHSU 32'h2002033
-`define INST_MULHSU_MASK 32'hfe00707f
-
-// mulhu
-`define INST_MULHU 32'h2003033
-`define INST_MULHU_MASK 32'hfe00707f
-
     
     /*===============================
                 OPCODES
@@ -105,13 +86,6 @@ module biriscv_multiplier
     /*===============================
                 CONTROL
     ===============================*/
-
-    wire mult_inst_w;
-
-    assign mult_inst_w    = ((opcode_opcode_i & `INST_MUL_MASK) == `INST_MUL)        || 
-                      ((opcode_opcode_i & `INST_MULH_MASK) == `INST_MULH)      ||
-                      ((opcode_opcode_i & `INST_MULHSU_MASK) == `INST_MULHSU)  ||
-                      ((opcode_opcode_i & `INST_MULHU_MASK) == `INST_MULHU);
 
 
     // Take the funct3 from opcode, bits 12, 13 and 14.
@@ -216,8 +190,6 @@ module biriscv_multiplier
                 STAGE 1 PIPE REGISTER
         ===============================*/
 
-        reg stall_s_p1_r;
-
         for (i=0 ; i<32 ; i=i+1) begin
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
@@ -233,11 +205,9 @@ module biriscv_multiplier
     always@(posedge clk_i, posedge rst_i)begin
         if(rst_i) begin
             Reg_upper_S1_s <= 1'b0;
-            stall_s_p1_r <= 1'b0;
         end
         else if(clk_i && ~hold_i) begin
             Reg_upper_S1_s <= upper_S1_s;
-            stall_s_p1_r <= mult_inst_w;
         end
     end
 
@@ -277,8 +247,6 @@ module biriscv_multiplier
                 STAGE 2 PIPE REGISTER
         ===============================*/
 
-        reg stall_s_p2_r;
-
         for (j=0 ; j<4 ; j=j+1) begin
             always@(posedge clk_i, posedge rst_i)begin
                 if(rst_i) begin
@@ -294,14 +262,10 @@ module biriscv_multiplier
     always@(posedge clk_i, posedge rst_i)begin
         if(rst_i) begin
             Reg_upper_S2_s <= 1'b0;
-            stall_s_p2_r <= 1'b0;
         end
         else if(clk_i && ~hold_i) begin
             Reg_upper_S2_s <= Reg_upper_S1_s;
-            stall_s_p2_r <= stall_s_p1_r;
         end
-        else
-            stall_s_p2_r <= 1'b0;
     end
 
     /*#####################################################################
@@ -333,12 +297,11 @@ module biriscv_multiplier
         if (rst_i) begin
             Stage3_s <= 32'h00000000;
         end
-        else if(clk_i && hold_i) begin
+        else if(clk_i && ~hold_i) begin
             Stage3_s <= final_result_s;
         end
     end
 
-    assign stall_o = stall_s_p2_r;
     assign writeback_value_o = Stage3_s;
 
     

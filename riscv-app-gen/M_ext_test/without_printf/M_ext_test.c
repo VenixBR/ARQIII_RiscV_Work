@@ -1,21 +1,27 @@
+// Compile with -O2
+
 #include <stdint.h>
 
 // ----------- MUL instructions -----------
 
+__attribute__((noinline))
 int32_t calc_mul(int32_t a, int32_t b) {
     return a * b;
 }
 
+__attribute__((noinline))
 int32_t calc_mulh(int32_t a, int32_t b) {
     int64_t prod = (int64_t)a * (int64_t)b;
     return (int32_t)(prod >> 32);
 }
 
+__attribute__((noinline))
 uint32_t calc_mulhu(uint32_t a, uint32_t b) {
     uint64_t prod = (uint64_t)a * (uint64_t)b;
     return (uint32_t)(prod >> 32);
 }
 
+__attribute__((noinline))
 int32_t calc_mulhsu(int32_t a, uint32_t b) {
     int64_t prod = (int64_t)a * (uint64_t)b;
     return (int32_t)(prod >> 32);
@@ -23,18 +29,22 @@ int32_t calc_mulhsu(int32_t a, uint32_t b) {
 
 // ----------- DIV / REM (32-bit) -----------
 
+__attribute__((noinline))
 int32_t calc_div(int32_t a, int32_t b) {
     return a / b;
 }
 
+__attribute__((noinline))
 uint32_t calc_divu(uint32_t a, uint32_t b) {
     return a / b;
 }
 
+__attribute__((noinline))
 int32_t calc_rem(int32_t a, int32_t b) {
     return a % b;
 }
 
+__attribute__((noinline))
 uint32_t calc_remu(uint32_t a, uint32_t b) {
     return a % b;
 }
