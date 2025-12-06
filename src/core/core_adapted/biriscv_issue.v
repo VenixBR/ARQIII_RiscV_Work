@@ -106,6 +106,7 @@ module biriscv_issue
     ,input  [  5:0]  csr_result_e1_exception_i
     ,input           lsu_stall_i
     ,input           take_interrupt_i
+    ,input           stall_mult_i
 
     // Outputs
     ,output          fetch0_accept_o
@@ -731,7 +732,7 @@ assign single_issue_w       = (opcode_a_issue_r & opcode_a_accept_r) & ~dual_iss
 assign fetch0_accept_o      = ((slot0_valid_r & opcode_a_accept_r) | slot1_valid_r) & ~take_interrupt_i;
 assign fetch1_accept_o      = ((slot1_valid_r & opcode_a_accept_r) | (opcode_b_accept_r)) & ~take_interrupt_i;
 
-assign stall_w              = pipe0_stall_raw_w | pipe1_stall_raw_w;
+assign stall_w              = pipe0_stall_raw_w | pipe1_stall_raw_w | stall_mult_i;
 
 //-------------------------------------------------------------
 // Register File

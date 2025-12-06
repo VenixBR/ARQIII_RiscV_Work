@@ -17,11 +17,11 @@ Desmontagem da secção .text:
 Desmontagem da secção .text.startup:
 
 80000020 <main>:
-80000020:	001535b7          	lui	a1,0x153
-80000024:	3ade7537          	lui	a0,0x3ade7
+80000020:	43a545b7          	lui	a1,0x43a54
+80000024:	6d73e537          	lui	a0,0x6d73e
 80000028:	fe010113          	addi	sp,sp,-32
-8000002c:	18658593          	addi	a1,a1,390 # 153186 <mdc-0x7feace7a>
-80000030:	8b150513          	addi	a0,a0,-1871 # 3ade68b1 <mdc-0x4521974f>
+8000002c:	f8258593          	addi	a1,a1,-126 # 43a53f82 <mdc-0x3c5ac07e>
+80000030:	55f50513          	addi	a0,a0,1375 # 6d73e55f <mdc-0x128c1aa1>
 80000034:	00112e23          	sw	ra,28(sp)
 80000038:	fc9ff0ef          	jal	ra,80000000 <mdc>
 8000003c:	01c12083          	lw	ra,28(sp)

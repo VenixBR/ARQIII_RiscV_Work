@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdio.h>
 
+__attribute__((noinline))
 int produto_escalar(const int *vetor1, const int *vetor2) {
     int resultado = 0;
     for (int i = 0; i < 7; i++) {
@@ -15,7 +17,8 @@ int main() {
 
     int vector2[] = {7, 6, 1, 0, 4, 1,2};
 
-    int resultado = produto_escalar(vector1, vector2);
+    int resultado = produto_escalar(vector1, vector2); // Answer : 0x62
+   // printf ("resultado : 0x%x\n", resultado);
 
-    return 0;
+    return resultado;
 }

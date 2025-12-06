@@ -155,9 +155,9 @@ report_hierarchy > ${RPT_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}_hierarchy
 # puts $fp [get_db hnet:sum_o[7] .lp_computed_toggle_rate]
 # close $fp
 
-source ../scripts/common/sdf_width_wa.etf
-write_sdf -edge check_edge -setuphold merge_always -nonegchecks -recrem merge_always -version 3.0 -design ${HDL_NAME}  > ${DEV_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}.sdf
-write_hdl ${HDL_NAME} > ${DEV_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}.v
+# source ../scripts/common/sdf_width_wa.etf
+# write_sdf -edge check_edge -setuphold merge_always -nonegchecks -recrem merge_always -version 3.0 -design ${HDL_NAME}  > ${DEV_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}.sdf
+# write_hdl ${HDL_NAME} > ${DEV_DIR}/${freq_mhz}_MHz/${OP_CORNER}/${HDL_NAME}.v
 
 
 #-----------------------------------------------------------------------------
