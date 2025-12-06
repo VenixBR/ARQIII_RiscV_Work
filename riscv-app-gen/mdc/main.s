@@ -2,16 +2,30 @@
 main.elf:     formato de ficheiro elf32-littleriscv
 
 
+Desmontagem da secção .text:
+
+80000000 <mdc>:
+80000000:	00050793          	mv	a5,a0
+80000004:	00058c63          	beqz	a1,8000001c <mdc+0x1c>
+80000008:	00058513          	mv	a0,a1
+8000000c:	02b7f5b3          	remu	a1,a5,a1
+80000010:	00050793          	mv	a5,a0
+80000014:	fe059ae3          	bnez	a1,80000008 <mdc+0x8>
+80000018:	00008067          	ret
+8000001c:	00008067          	ret
+
 Desmontagem da secção .text.startup:
 
-80000000 <main>:
-80000000:	075bd7b7          	lui	a5,0x75bd
-80000004:	3ade7737          	lui	a4,0x3ade7
-80000008:	d1578793          	addi	a5,a5,-747 # 75bcd15 <main-0x78a432eb>
-8000000c:	8b170713          	addi	a4,a4,-1871 # 3ade68b1 <main-0x4521974f>
-80000010:	00078693          	mv	a3,a5
-80000014:	02f767b3          	rem	a5,a4,a5
-80000018:	00068713          	mv	a4,a3
-8000001c:	fe079ae3          	bnez	a5,80000010 <main+0x10>
-80000020:	00000513          	li	a0,0
-80000024:	00008067          	ret
+80000020 <main>:
+80000020:	001535b7          	lui	a1,0x153
+80000024:	3ade7537          	lui	a0,0x3ade7
+80000028:	fe010113          	addi	sp,sp,-32
+8000002c:	18658593          	addi	a1,a1,390 # 153186 <mdc-0x7feace7a>
+80000030:	8b150513          	addi	a0,a0,-1871 # 3ade68b1 <mdc-0x4521974f>
+80000034:	00112e23          	sw	ra,28(sp)
+80000038:	fc9ff0ef          	jal	ra,80000000 <mdc>
+8000003c:	01c12083          	lw	ra,28(sp)
+80000040:	00a12623          	sw	a0,12(sp)
+80000044:	00c12503          	lw	a0,12(sp)
+80000048:	02010113          	addi	sp,sp,32
+8000004c:	00008067          	ret
